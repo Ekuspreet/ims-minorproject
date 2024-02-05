@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import Bicon from  '../../assets/icon.png'
+import { Link } from 'react-router-dom'
 const Navbar = () => {
    
   return (
@@ -32,7 +33,7 @@ menu
       </ul>
   </div>
   <div className="navbar-end">
-    <a className="btn  btn-primary btn-outline">Sign Up</a>
+ <Link to = "/signup"  >   <a className="btn md:btn-md btn-sm btn-primary btn-outline">Sign Up</a> </Link>
   </div>
 </div>
     </>
