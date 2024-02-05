@@ -43,7 +43,7 @@ const AuthDisplay = () => {
                 <div className="card w-auto h-auto  bg-base-100 bg-opacity-80  shadow-xl image-full  ">
             <figure><img className="w-screen" src="https://img.freepik.com/free-vector/communication-flat-icon_1262-18771.jpg" alt="Shoes" /></figure>
                     <div className="card-body items-center">
-                        <h2 className="card-title text-lg mx-auto md:text-3xl "> I am a <span className='text-primary font-bold' > EMPLOYEE</span> </h2>
+                        <h2 className="card-title text-lg mx-auto md:text-3xl "> I am an <span className='text-primary font-bold' > EMPLOYEE</span> </h2>
                         <div className="divider"> Login </div>
 
                         <form action="#" className=' w-full flexflex-col justify-center items-center'>
