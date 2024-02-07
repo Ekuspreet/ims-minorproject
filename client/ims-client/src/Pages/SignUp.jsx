@@ -7,9 +7,9 @@ const SignUp = () => {
             <NavbarSignup />
 
 
-            <div className="hero min-h-screen bg-base-200">
+            <div className="hero min-h-screen bg-base-200  ">
                 <div className="hero-content  flex-col md:flex-row  ">
-                    <img  src="https://img.freepik.com/free-vector/sign-page-abstract-concept-illustration_335657-3875.jpg" className=" w-10/12 md:w-2/6 max-w-md rounded-lg shadow-2xl" />
+                    <img  src="https://img.freepik.com/free-vector/sign-page-abstract-concept-illustration_335657-3875.jpg" className=" w-10/12 md:w-7/12 max-w-md rounded-lg shadow-2xl" />
                     <div>
 
 
@@ -17,12 +17,18 @@ const SignUp = () => {
                             <form className=' w-full flexflex-col justify-center items-center'>
 
                                 <div className="label">
-                                    <span className="label-text">Business ID</span>
+                                    <span className="label-text">Business Name</span>
                                 </div>
                                 <input type="text" placeholder="Type here" className="input input-bordered w-full" />
 
                                 <div className="label">
                                     <span className="label-text">Email ID</span>
+                                </div>
+                                <input type="text" placeholder="Type here" className="input input-bordered w-full" />
+
+
+                                <div className="label">
+                                    <span className="label-text">Admin Name</span>
                                 </div>
                                 <input type="text" placeholder="Type here" className="input input-bordered w-full" />
 
