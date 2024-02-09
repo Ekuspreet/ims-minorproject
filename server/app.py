@@ -1,24 +1,46 @@
-# Import the Flask module
-from flask import Flask, render_template, jsonify
-from flask_cors import CORS
-# Create an instance of the Flask class
+from flask import Flask, session, render_template, redirect
+from flask_pymongo import PyMongo
+import pymongo
+from datetime import datetime, timedelta
+from functools import wraps
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 app = Flask(__name__)
-CORS(app)
-# Define a route and a corresponding function
-@app.route('/')
-def home():
-    return jsonify()
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+app.config["MONGO_URI"] = os.getenv('MONGO_URI')
+mongo = PyMongo(app)
 
-# Define another route with a dynamic parameter
-@app.route('/greet/<name>')
-def greet(name):
-    return f'Hello, {name}!'
+# Database
+client = pymongo.MongoClient('localhost', 27017)
+db = client.IMS_database
 
-# Define a route that renders an HTML template
-@app.route('/template')
-def render_template_example():
-    return render_template('index.html', title='Flask Template', content='This is rendered from a template.')
+# Decorators
+def login_required(f):
+    @wraps(f)
+    def wrap(*args, **kwargs):
+        if "logged_in" in session:
+            return f(*args, **kwargs)
+        
+        else:
+            return redirect('/')
+        
+    return wrap
 
-# Run the Flask application
-if __name__ == '__main__':
-    app.run(debug=True,port=8000 )
+
+# Routes
+from user import routes
+
+@app.route("/")
+def home_page():
+    return render_template("home.html")
+
+@app.route("/dashboard")
+@login_required
+def dashboard():
+    return render_template("dashboard.html")
+    
+if __name__ == "__main__":
+    app.run(debug=True)
