@@ -1,6 +1,7 @@
 from flask import Flask, session, render_template, redirect
 from flask_pymongo import PyMongo
-import pymongo
+from pymongo.mongo_client import MongoClient
+from pymongo.server_api import ServerApi
 from datetime import datetime, timedelta
 from functools import wraps
 import os
@@ -10,11 +11,12 @@ load_dotenv()
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
-app.config["MONGO_URI"] = os.getenv('MONGO_URI')
+URI = os.getenv('MONGO_URI')
+app.config["MONGO_URI"] = URI
 mongo = PyMongo(app)
 
 # Database
-client = pymongo.MongoClient('localhost', 27017)
+client = MongoClient(URI , server_api=ServerApi('1'))
 db = client.IMS_database
 
 # Decorators
