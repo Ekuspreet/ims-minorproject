@@ -1,6 +1,18 @@
-import React from 'react'
+import React, { useState } from 'react'
 import NavbarSignup from '../Components/Navbar/NavbarSignup'
 const SignUp = () => {
+
+    const [signUpData,setSignUpData] = useState({
+        bid : "",
+        eid : "",
+        name : "",
+        pass : ""
+    })
+
+    function inputData(){
+
+    }
+
     return (
         <>
 
@@ -19,7 +31,7 @@ const SignUp = () => {
                                 <div className="label">
                                     <span className="label-text">Business Name</span>
                                 </div>
-                                <input type="text" placeholder="Type here" className="input input-bordered w-full" />
+                                <input  type="text" placeholder="Type here" className="input input-bordered w-full" />
 
                                 <div className="label">
                                     <span className="label-text">Email ID</span>
