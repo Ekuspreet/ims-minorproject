@@ -1,4 +1,5 @@
 from flask import Flask, session, render_template, redirect
+from flask_cors import CORS
 from flask_pymongo import PyMongo
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
@@ -10,6 +11,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = Flask(__name__)
+CORS(app)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 URI = os.getenv('MONGO_URI')
 app.config["MONGO_URI"] = URI
