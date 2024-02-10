@@ -1,46 +1,31 @@
 import React, { useState } from 'react'
 import NavbarSignup from '../Components/Navbar/NavbarSignup'
 import axios from 'axios';
-axios.defaults.timeout = 30000
-axios.defaults.timeoutErrorMessage='timeout'
-const SERVER_URL = import.meta.env.VITE_API_URL;
-console.log(SERVER_URL)
 const SignUp = () => {
 
     const [signUpData,setSignUpData] = useState({
     })
 
     function inputData(event){
+        console.log(signUpData)
         setSignUpData({
             ...signUpData,
             [event.target.name] : event.target.value,
         })
+
     }
 
-    async function handleSubmit() {
-        try {
-          console.log("Request Data:", signUpData);
+    async function handleSubmit(event) {
+        event.preventDefault()
+        console.log("Submission",signUpData)
       
-          const response = await axios.post(SERVER_URL + "user/signup", signUpData);
       
-          // Handle the successful response
-          console.log("Response:", response.data);
-        } catch (error) {
-          if (axios.isCancel(error)) {
-            // Request was canceled
-            console.log('Request canceled:', error.message);
-          } else {
-            // Handle other errors
-            console.error('Error:', error);
+        // Axios returns a promise, and any errors will be propagated
+        const response = await axios.post("http://localhost:5000/user/signup", signUpData);
       
-            // Check if it's an "ECONNABORTED" error
-            if (error.code === 'ECONNABORTED') {
-              console.error('Request timed out. Check your server and network.');
-            }
-          }
-        }
-      }
-      
+        // Handle the successful response
+        console.log("Response:", response.data);
+    }
     return (
         <>
 
@@ -54,7 +39,7 @@ const SignUp = () => {
 
 
                         <div className="signup">
-                            <form onSubmit={handleSubmit} className=' w-full flexflex-col justify-center items-center'>
+                            <form  method='post' onSubmit={handleSubmit} className=' w-full flexflex-col justify-center items-center'>
 
                                 <div className="label">
                                     <span className="label-text">Business Name</span>
