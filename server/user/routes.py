@@ -1,4 +1,4 @@
-from flask import redirect
+from flask import redirect, render_template
 from app import app
 from user.models import User
 
@@ -20,4 +20,9 @@ def signout():
 
 @app.route('/user/login', methods=["POST"])
 def login():
-    return User().login()
+    user = User().login()
+    return render_template("dashboard.html")
+
+@app.route('/user/delete', methods=["POST"])
+def delete():
+    return User().delete_user()

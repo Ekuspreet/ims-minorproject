@@ -54,3 +54,19 @@ class User:
         return jsonify({
             "error": "Credentials not found"
         }), 401
+        
+    def delete_user(self):
+        if 'user' in session:
+            user_id = session['user']['_id']
+            # Find the user in the database
+            user = db.users.find_one({ "_id": user_id })
+            
+            # If user found, delete it
+            if user:
+                db.users.delete_one({ "_id": user_id })
+                session.clear()  # Clear the session after deleting the user
+                return jsonify({ "message": "User deleted successfully" }), 200
+            else:
+                return jsonify({ "error": "User not found" }), 404
+        else:
+            return jsonify({ "error": "User not logged in" }), 401
