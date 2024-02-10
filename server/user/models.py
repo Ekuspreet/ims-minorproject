@@ -14,13 +14,15 @@ class User:
     
     def signup(self):
         
+        print(request.json)
+        
         # create user object
         user = {
             "_id": uuid.uuid4().hex,
-            "business": request.form.get("business"),
-            "name" : request.form.get("name"),
-            "email": request.form.get("email"),
-            "password": request.form.get("password")
+            "business": request.json["business"],
+            "name" : request.json["name"],
+            "email": request.json["email"],
+            "password": request.json["password"]
         }
         
         # Encrypt the password
