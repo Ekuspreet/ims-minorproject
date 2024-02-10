@@ -16,19 +16,27 @@ const SignUp = () => {
     }
 
     async function handleSubmit(event) {
-        event.preventDefault()
-        console.log("Submission",signUpData)
-      
-      
-        // Axios returns a promise, and any errors will be propagated
-        const response = await axios.post("http://localhost:5000/user/signup", signUpData , {
-            headers: {
-              'Access-Control-Allow-Origin': '*',
-            }});
-      
-        // Handle the successful response
-        console.log("Response:", response.data);
+        event.preventDefault();
+    
+        try {
+            console.log("Submission", signUpData);
+    
+            const response = await axios.post("http://localhost:5000/user/signup", signUpData, {
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                },
+            });
+    
+            // Handle the successful response
+            console.log("Response:", response.data);
+        } catch (error) {
+            // Handle errors
+            console.error("Error:", error);
+    
+            // You may want to do additional error handling here, such as displaying an error message to the user
+        }
     }
+    
     return (
         <>
 
