@@ -21,7 +21,10 @@ const SignUp = () => {
       
       
         // Axios returns a promise, and any errors will be propagated
-        const response = await axios.post("http://localhost:5000/user/signup", signUpData);
+        const response = await axios.post("http://localhost:5000/user/signup", signUpData , {
+            headers: {
+              'Access-Control-Allow-Origin': '*',
+            }});
       
         // Handle the successful response
         console.log("Response:", response.data);
