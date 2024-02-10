@@ -36,6 +36,7 @@ def login_required(f):
 
 # Routes
 from user import routes
+from item import routes
 
 @app.route("/")
 def home_page():
