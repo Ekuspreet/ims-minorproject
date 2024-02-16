@@ -1,8 +1,8 @@
 from flask import jsonify, request, session, redirect
+from flask_jwt_extended import create_access_token
 from passlib.hash import pbkdf2_sha256
 from app import db
 import uuid
-
 
 class User:
     
@@ -10,7 +10,10 @@ class User:
         del user["password"]
         session['logged_in'] = True
         session['user'] = user
-        return jsonify(session['logged_in']), 200
+        
+        jwt_token = create_access_token(identity=user["name"])
+        
+        return jsonify(jwt_token=jwt_token), 200
     
     def signup(self):
         
@@ -20,6 +23,7 @@ class User:
             "business": request.json["business"],
             "name" : request.json["name"],
             "email": request.json["email"],
+            # "role": request.json["role"],
             "password": request.json["password"]
         }
         
