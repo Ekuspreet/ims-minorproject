@@ -40,7 +40,6 @@ def autoauthenticate():
     else:
         return jsonify({'isLoggedIn': False})
 
-
     
 if __name__ == "__main__":
     app.run(debug=True)
