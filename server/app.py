@@ -19,7 +19,6 @@ URI = os.getenv('MONGO_URI')
 app.config["MONGO_URI"] = URI
 mongo = PyMongo(app)
 jwt = JWTManager(app)
-session["logged_in"] = False
 
 # Database
 client = MongoClient(URI , server_api=ServerApi('1'))
@@ -29,9 +28,17 @@ db = client.IMS_database
 from user import routes
 from item import routes
 
+@app.route("/")
+def home_page():
+    return "Easter Eggs Babyyyy"
+
+
 @app.route("/autoauthenticate")
 def autoauthenticate():
-    return jsonify({"isLoggedIn": session["logged_in"]})
+    if "logged_in" in session:
+        return jsonify({'isLoggedIn': True})
+    else:
+        return jsonify({'isLoggedIn': False})
 
 
     
