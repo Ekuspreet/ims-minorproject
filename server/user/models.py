@@ -20,7 +20,6 @@ class User:
         # create user object
         user = {
             "_id": uuid.uuid4().hex,
-            "business": request.json["business"],
             "name" : request.json["name"],
             "email": request.json["email"],
             # "role": request.json["role"],
@@ -58,6 +57,19 @@ class User:
         return jsonify({
             "error": "Credentials not found"
         }), 401
+        
+        
+    def create_user(self):
+        user = {
+            "_id": uuid.uuid4().hex,
+            "name" : request.json["name"],
+            "email": request.json["email"],
+            "password": request.json["password"]
+        }
+        pass
+
+    def change_password(self):
+        pass
         
     def delete_user(self):
         if 'user' in session:
