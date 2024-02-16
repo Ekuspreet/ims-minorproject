@@ -21,11 +21,7 @@ const SignUp = () => {
         try {
             console.log("Submission", signUpData);
     
-            const response = await axios.post("http://localhost:5000/user/signup", signUpData, {
-                headers: {
-                    'Access-Control-Allow-Origin': '*',
-                },
-            });
+            const response = await axios.post("/api/user/signup", signUpData);
     
             // Handle the successful response
             console.log("Response:", response.data);
