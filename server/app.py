@@ -1,4 +1,4 @@
-from flask import Flask, session, render_template, redirect
+from flask import Flask, session, render_template, redirect, jsonify
 from flask_cors import CORS
 from flask_pymongo import PyMongo
 from pymongo.mongo_client import MongoClient
@@ -24,31 +24,14 @@ jwt = JWTManager(app)
 client = MongoClient(URI , server_api=ServerApi('1'))
 db = client.IMS_database
 
-# Decorators
-def login_required(f):
-    @wraps(f)
-    def wrap(*args, **kwargs):
-        if "logged_in" in session:
-            return f(*args, **kwargs)
-        
-        else:
-            return redirect('/')
-        
-    return wrap
-
-
 # Routes
 from user import routes
 from item import routes
 
-@app.route("/")
+@app.route("/autoauthenticate")
 def home_page():
-    return render_template("home.html")
+    return jsonify(session["logged in"])
 
-@app.route("/dashboard")
-@login_required
-def dashboard():
-    return render_template("dashboard.html")
     
 if __name__ == "__main__":
     app.run(debug=True)
