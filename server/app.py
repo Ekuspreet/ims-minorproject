@@ -19,6 +19,7 @@ URI = os.getenv('MONGO_URI')
 app.config["MONGO_URI"] = URI
 mongo = PyMongo(app)
 jwt = JWTManager(app)
+session["logged_in"] = False
 
 # Database
 client = MongoClient(URI , server_api=ServerApi('1'))
@@ -29,12 +30,9 @@ from user import routes
 from item import routes
 
 @app.route("/autoauthenticate")
-def home_page():
-    if 'logged_in' in session:
-        return jsonify(session["logged_in"])
-    
-    else:
-        return jsonify({"logged_in": False})
+def autoauthenticate():
+    return jsonify({"isLoggedIn": session["logged_in"]})
+
 
     
 if __name__ == "__main__":
