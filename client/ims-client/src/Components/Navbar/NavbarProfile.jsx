@@ -22,9 +22,9 @@ const NavbarProfile = () => {
                             </label>
 
 
-                            <a className="btn btn-ghost text-3xl font-bold">
+                            <Link to={"/Landing"} className="btn btn-ghost text-3xl font-bold">
                                 <img src={Bicon} className='h-8 w-8 opacity-50' alt="" />
-                                IMS</a>
+                                IMS</Link>
                         </div>
 
                         <div className="navbar-center hidden md:flex">

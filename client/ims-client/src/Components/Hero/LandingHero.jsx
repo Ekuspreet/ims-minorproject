@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 const LandingHero = () => {
   return (
@@ -10,7 +11,7 @@ const LandingHero = () => {
     <div className="max-w-md">
       <h1 className="mb-5 text-2xl font-bold">Welcome To <br></br> <span className=' text-primary text-7xl'>IMS</span></h1>
       <p className="mb-5">Empower your business with our one-stop solution for effortless and humane inventory management. Streamline operations with a touch of compassion!</p>
-      <button className="btn btn-glass">Sign Up Now!</button>
+      <Link to={"/signup"} className="btn btn-glass">Sign Up Now!</Link>
     </div>
   </div>
 </div>

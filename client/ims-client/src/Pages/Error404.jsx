@@ -12,7 +12,7 @@ error
 </span>
  <span className='text-xl font-bold' >The Page You Are Looking For Does Not Exist</span>
   <div>
-   < Link  to={"/"} >   <button className="btn btn-md">Visit HomePage</button> </Link>
+   < Link  to={"/Landing"} >   <button className="btn btn-md">Visit HomePage</button> </Link>
   </div>
 </div>
     </>
