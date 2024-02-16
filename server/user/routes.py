@@ -14,7 +14,7 @@ def signout():
 def login():
     return User().login()
 
-@app.route('/user/create', methods="POST")
+@app.route('/user/create', methods=["POST"])
 def create():
     return User().create_user()
 

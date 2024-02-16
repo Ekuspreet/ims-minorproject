@@ -28,7 +28,7 @@ db = client.IMS_database
 from user import routes
 from item import routes
 
-@app.route("/autoauthenticate")
+@app.route("/")
 def home_page():
     return jsonify(session["logged in"])
 
