@@ -10,11 +10,9 @@ class User:
         del user["password"]
         session['logged_in'] = True
         session['user'] = user
-        return jsonify(user), 200
+        return jsonify(session['logged_in']), 200
     
     def signup(self):
-        
-        print(request.json)
         
         # create user object
         user = {
@@ -47,10 +45,10 @@ class User:
     def login(self):
         
         user = db.users.find_one({
-            "email": request.form.get('email')
+            "email": request.json["email"]
         })
         
-        if user and pbkdf2_sha256.verify(request.form.get('password'), user['password']):
+        if user and pbkdf2_sha256.verify(request.json["password"], user['password']):
             return self.start_session(user)
         
         return jsonify({
