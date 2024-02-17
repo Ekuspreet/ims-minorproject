@@ -18,6 +18,10 @@ def login():
 def create():
     return User().create_user()
 
+@app.route("/user/change-password", methods=["POST"])
+def change_password():
+    return User().change_password()
+
 @app.route('/user/delete', methods=["POST"])
 def delete():
     return User().delete_user()

@@ -22,8 +22,8 @@ class User:
             "_id": uuid.uuid4().hex,
             "name" : request.json["name"],
             "email": request.json["email"],
-            # "role": request.json["role"],
-            "password": request.json["password"]
+            "password": request.json["password"],
+            "role": "admin"
         }
         
         # Encrypt the password
@@ -42,7 +42,7 @@ class User:
     
     def signout(self):
         session.clear()
-        return redirect("/")
+        return jsonify({"success": True})
     
     
     def login(self):
@@ -51,7 +51,7 @@ class User:
             "email": request.json["email"]
         })
         
-        if user and pbkdf2_sha256.verify(request.json["password"], user['password']):
+        if user and pbkdf2_sha256.verify(request.json["password"], user['password']) and (request.json["role"] == user["role"]):
             return self.start_session(user)
         
         return jsonify({
@@ -64,13 +64,33 @@ class User:
             "_id": uuid.uuid4().hex,
             "name" : request.json["name"],
             "email": request.json["email"],
-            "password": request.json["password"]
+            "password": request.json["password"],
+            "role": "employee"
         }
-        pass
+        
+        user["password"] = pbkdf2_sha256.encrypt(user['password'])
+        
+        if db.users.find_one({ "email": user['email'] }):
+            return "Email Already exists", 201
+        else:
+            if db.users.insert_one(user):
+                return jsonify({"success" : True}), 200
+    
 
     def change_password(self):
-        pass
+        user = db.users.find_one({
+            "_id": session["_id"]
+        })
         
+        if user and pbkdf2_sha256.verify(request.json["old_password"], user['password']):
+            
+            new_password = pbkdf2_sha256.encrypt(request.json["new_password"])
+            db.users.update_one({"_id": session["_id"]}, {"$set": {"password": new_password}})
+            return jsonify({"success": True, "message": "Password changed successfully"}), 200
+        
+        else:
+            return jsonify({"success": False, "message": "Password does not match"}), 401
+                
     def delete_user(self):
         if 'user' in session:
             user_id = session['user']['_id']
