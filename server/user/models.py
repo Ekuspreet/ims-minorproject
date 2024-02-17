@@ -1,8 +1,9 @@
-from flask import jsonify, request, session, redirect
+from flask import jsonify, request, session 
 from flask_jwt_extended import create_access_token
 from passlib.hash import pbkdf2_sha256
 from app import db
 import uuid
+import secrets
 
 class User:
     
@@ -17,23 +18,37 @@ class User:
     
     def signup(self):
         
-        # create user object
-        user = {
-            "_id": uuid.uuid4().hex,
-            "name" : request.json["name"],
-            "email": request.json["email"],
-            "password": request.json["password"],
-            "role": "admin"
-        }
-        
-        # Encrypt the password
-        user["password"] = pbkdf2_sha256.encrypt(user['password'])
-        
         # Check for existing email address
-        if db.users.find_one({ "email": user['email'] }):
+        if db.businesses.find_one({ "employees.email": request.json["email"] }):
             return "Email Already exists", 201
+        
         else:
-            if db.users.insert_one(user):
+            business_id = secrets.token_hex(6)
+            employee_id = secrets.token_hex(6)
+            
+            # create business object
+            business = {
+                "_id": uuid.uuid4().hex,
+                "business_name" : request.json["business"],
+                "business_id": business_id,
+                "employees": [],
+                "items": [],
+                "recipes": []
+            }
+            
+            # create employee object
+            user = {
+                "employee_id" : employee_id,
+                "name" : request.json["name"],
+                "email" : request.json["email"],
+                "role" : "admin",
+                "password" : request.json["password"]
+            }
+            
+            user["password"] = pbkdf2_sha256.encrypt(user['password'])
+        
+            db.businesses.insert_one(business)
+            if db.businesses.update_one({'business_id': business_id}, {'$push': {'employees': user}}):
                 return self.start_session(user)
             
         return jsonify( { "error": "Signup failed" } ), 400
@@ -47,11 +62,11 @@ class User:
     
     def login(self):
         
-        user = db.users.find_one({
-            "email": request.json["email"]
+        user = db.businesses.find_one({
+            "employees.email": request.json["email"]
         })
         
-        if user and pbkdf2_sha256.verify(request.json["password"], user['password']) and (request.json["role"] == user["role"]):
+        if user and pbkdf2_sha256.verify(request.json["password"], user['password']):
             return self.start_session(user)
         
         return jsonify({
@@ -65,7 +80,7 @@ class User:
             "name" : request.json["name"],
             "email": request.json["email"],
             "password": request.json["password"],
-            "role": "employee"
+            "role": request.json["role"]
         }
         
         user["password"] = pbkdf2_sha256.encrypt(user['password'])
