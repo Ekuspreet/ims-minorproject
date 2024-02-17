@@ -2,20 +2,16 @@ import React from 'react'
 import Bicon from '../../assets/icon.png'
 import { Link } from 'react-router-dom'
 import { useState } from 'react';
-const NavbarProfile = () => {
-    const [isDrawerOpen, setDrawerOpen] = useState(false);
-    const toggle = () => { setDrawerOpen(!isDrawerOpen) }
-
+const NavbarProfile = ({toggler}) => {
+   
     return (
         <>
-            <div className="drawer">
-                <input id="my-drawer" type="checkbox" className="drawer-toggle" checked={isDrawerOpen} />
-                <div className="drawer-content">
+            
 
                     <div className="navbar bg-base-300 md:px-8 ">
                         <div className="navbar-start">
 
-                            <label tabIndex={0} htmlFor="my-drawer" role="button" className="btn btn-ghost drawer-button " onClick={toggle}>
+                            <label tabIndex={0} htmlFor="my-drawer" role="button" className="btn btn-ghost drawer-button " onClick={toggler}>
                                 <span class="material-symbols-outlined">
                                     menu
                                 </span>
@@ -72,26 +68,7 @@ const NavbarProfile = () => {
                         <div className="navbar-end"></div>
                     </div>
 
-                </div>
-                <div className="drawer-side">
-                    <label htmlFor="my-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
-                    <ul className="menu p-4 w-screen sm:w-80  min-h-full bg-base-200 text-base-content">
-
-
-                        <button tabIndex={0} onClick={toggle} className="btn btn-ghost drawer-button ">
-
-                            <span class="material-symbols-outlined">
-                                close
-                            </span>
-                        </button>
-
-                        {/* Sidebar content here */}
-                        <li><a>Sidebar Item 1</a></li>
-                        <li><a>Sidebar Item 2</a></li>
-
-                    </ul>
-                </div>
-            </div>
+                
 
         </>
     )
