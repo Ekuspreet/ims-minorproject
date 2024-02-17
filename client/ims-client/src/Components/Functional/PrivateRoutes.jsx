@@ -9,7 +9,7 @@ async function getValidAuth(){
 
 const PrivateRoutes = () => {
     return(
-    getValidAuth() ? <Outlet /> : <Navigate to={'/'}/>
+    false ? <Outlet /> : <Navigate to={'/'}/>
     )
 }
 

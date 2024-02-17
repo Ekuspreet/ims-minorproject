@@ -6,11 +6,9 @@ import { Navigate } from 'react-router-dom'
 
 const Landing = () => {
   return (
-    
-
-
-    <>
-<Navigate to= "/Profile" />
+ false ? (    <Navigate to= "/Profile" />
+) :  
+<>
     <Navbar/>
 
     <LandingHero/>
