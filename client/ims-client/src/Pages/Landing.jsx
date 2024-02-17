@@ -2,10 +2,15 @@ import React from 'react'
 import Navbar from '../Components/Navbar/Navbar'
 import LandingHero from '../Components/Hero/LandingHero'
 import AuthDisplay from '../Components/Hero/AuthDisplay'
+import { Navigate } from 'react-router-dom'
 
 const Landing = () => {
   return (
+    
+
+
     <>
+<Navigate to= "/Profile" />
     <Navbar/>
 
     <LandingHero/>

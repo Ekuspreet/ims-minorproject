@@ -22,7 +22,7 @@ const NavbarProfile = () => {
                             </label>
 
 
-                            <Link to={"/Landing"} className="btn btn-ghost text-3xl font-bold">
+                            <Link to={"/"} className="btn btn-ghost text-3xl font-bold">
                                 <img src={Bicon} className='h-8 w-8 opacity-50' alt="" />
                                 IMS</Link>
                         </div>
