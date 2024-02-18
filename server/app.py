@@ -30,11 +30,13 @@ from item import routes
 
 @app.route("/")
 def home_page():
+    print(session)
     return "Easter Eggs Babyyyy"
 
 
 @app.route("/autoauthenticate")
 def autoauthenticate():
+    print(session)
     if "logged_in" in session:
         return jsonify({'isLoggedIn': True})
     else:

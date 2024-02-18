@@ -8,8 +8,10 @@ import secrets
 class User:
     
     def start_session(self, user, signIn, business_id):
+        
         del user["password"]
         session['logged_in'] = True
+        
         session['user'] = user
         session["business_id"] = business_id
         
@@ -98,12 +100,16 @@ class User:
         
     def create_user(self):
         
+        print(session)
+        if not session:
+            return jsonify({"error": "business id not in session"})
+        
         employee_id = secrets.token_hex(6)
         name = request.json["name"]
         email = request.json["email"]
         role = request.json["role"]
         password = request.json["password"]
-        business_id = session["business_id"]
+        business_id = request.json["business_id"]
         
         user = {
             "employee_id": employee_id,

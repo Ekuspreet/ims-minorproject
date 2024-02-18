@@ -3,8 +3,7 @@ from user.models import User
 
 @app.route('/user/signup', methods=["POST"])
 def signup():
-    user = User()
-    return user.signup()
+    return User().signup()
 
 @app.route('/user/signout')
 def signout():
@@ -25,3 +24,4 @@ def change_password():
 @app.route('/user/delete', methods=["POST"])
 def delete():
     return User().delete_user()
+
