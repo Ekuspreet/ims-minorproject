@@ -36,7 +36,6 @@ def home_page():
 
 @app.route("/autoauthenticate")
 def autoauthenticate():
-    print(session)
     if "logged_in" in session:
         return jsonify({'isLoggedIn': True})
     else:

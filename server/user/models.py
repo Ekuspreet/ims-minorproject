@@ -100,9 +100,9 @@ class User:
         
     def create_user(self):
         
-        print(session)
-        if not session:
-            return jsonify({"error": "business id not in session"})
+        # print(session)
+        # if not session:
+        #     return jsonify({"error": "business id not in session"})
         
         employee_id = secrets.token_hex(6)
         name = request.json["name"]

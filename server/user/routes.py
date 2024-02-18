@@ -21,7 +21,7 @@ def create():
 def change_password():
     return User().change_password()
 
-@app.route('/user/delete', methods=["POST"])
-def delete():
-    return User().delete_user()
+# @app.route('/user/delete', methods=["POST"])
+# def delete():
+#     return User().delete_user()
 
