@@ -6,7 +6,7 @@ import SignUp from './Pages/SignUp';
 import Profile from './Pages/Profile';
 // import PrivateRoute from './Components/Functional/PrivateRoute';
 // import axios  from 'axios';
-import PrivateRoutes from './Components/Functional/PrivateRoutes';
+// import PrivateRoutes from './Components/Functional/PrivateRoutes';
 
 
 // const [isLoggedIn, setIsLoggedIn] = useState(false)
