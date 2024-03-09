@@ -1,33 +1,31 @@
-import{ React,useState }from 'react'
+import { React, useState } from 'react'
 import NavbarProfile from '../Components/Navbar/NavbarProfile'
+import Alertbox from '../Components/Alerts/Alertbox';
 
 
 
 
 const Profile = () => {
-  
-  
-const [isDrawerOpen, setDrawerOpen] = useState(false);
-const toggle = () => { setDrawerOpen(!isDrawerOpen) }
+
+
+  const [isDrawerOpen, setDrawerOpen] = useState(false);
+  const toggle = () => { setDrawerOpen(!isDrawerOpen) }
 
   return (
 
 
-<>
+    <>
 
       <div className="drawer">
         <input id="my-drawer" type="checkbox" className="drawer-toggle" checked={isDrawerOpen} />
         <div className="drawer-content">
 
-          <NavbarProfile  toggler = {toggle} />
+          <NavbarProfile toggler={toggle} />
 
-        <div className="hero-content">
-          <div className="alerts bg-red-300 h-96 w-40">
-          </div>          
+          <div className="main-content">
+
+            <Alertbox />
           </div>
-
-
-
 
 
         </div>
@@ -52,11 +50,11 @@ const toggle = () => { setDrawerOpen(!isDrawerOpen) }
 
           </ul>
         </div>
-        </div>
-        </>
+      </div>
+    </>
 
 
-      )
+  )
 }
 
 export default Profile

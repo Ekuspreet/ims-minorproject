@@ -16,9 +16,9 @@ const App = () => {
   return (
     <>
     <Routes>
-      <Route element = {<PrivateRoutes/>}>
+      
           <Route path='/Profile' element={ <Profile/> }  exact /> 
-      </Route>
+
         <Route path="/" element={<Landing />} />
         <Route path="/Signup" element={<SignUp />} />
         {/* <Route path="/profile" element={<Profile />} /> */}
