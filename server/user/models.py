@@ -59,7 +59,7 @@ class User:
             
             # create business object
             business = {
-                "_id": BIZ_ID,
+                "_id": uuid.uuid4().hex,
                 "business_name" : business_name,
                 "business_id": BIZ_ID,
                 "employees": [],
