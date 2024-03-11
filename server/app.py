@@ -1,11 +1,9 @@
-from flask import Flask, session, render_template, redirect, jsonify
+from flask import Flask, session, jsonify
 from flask_cors import CORS
 from flask_pymongo import PyMongo
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from flask_jwt_extended import JWTManager
-from datetime import datetime, timedelta
-from functools import wraps
 import os
 from dotenv import load_dotenv
 
@@ -27,11 +25,6 @@ db = client.IMS_database
 # Routes
 from user import routes
 from item import routes
-
-@app.route("/")
-def home_page():
-    print(session)
-    return "Easter Eggs Babyyyy"
 
 
 @app.route("/autoauthenticate")

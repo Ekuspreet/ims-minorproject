@@ -1,6 +1,6 @@
 from flask import jsonify, request, session
 from app import db
-import secrets
+import uuid
 
 class Item:
     
@@ -9,10 +9,11 @@ class Item:
         item_name = request.json["item_name"]
         quantity = float(request.json["quantity"])
         business_id = request.json["business_id"]
-        item_id = secrets.token_hex(6)
+        item_id = uuid.uuid4().hex
 
-        if db.businesses.count_documents({"business_id" : business_id, "items.item_name": item_name}):
+        if db.businesses.count_documents({"business_id" : business_id, "items": {"$elemMatch": {"name": item_name}}}):
             return jsonify({"error": "Item already present"})
+
         
         else:
             

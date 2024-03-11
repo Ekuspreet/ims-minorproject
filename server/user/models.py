@@ -4,9 +4,11 @@ from passlib.hash import pbkdf2_sha256
 from app import db
 import uuid
 import secrets
+import json
+
 
 class User:
-    
+
     def start_session(self, user, signIn, business_id):
         
         del user["password"]
@@ -29,6 +31,19 @@ class User:
     
     def signup(self):
         
+        # Extract the business number to assign to new business
+        file_path = "user\BIZ_NO.json"
+        with open(file_path, 'r') as f:
+            data = json.load(f)
+
+        BIZ_NO = data.get("BIZ_NO") + 1
+        BIZ_ID = "BIZ0" + str(BIZ_NO)
+
+        # update business number and push into json file
+        data["BIZ_NO"] = BIZ_NO
+        with open(file_path, 'w') as f:
+            json.dump(data, f)
+
         # extract data from form request
         business_name = request.json["business"]
         email = request.json["email"]
@@ -40,17 +55,17 @@ class User:
             return "Email Already exists", 201
         
         else:
-            business_id = secrets.token_hex(6)
             employee_id = secrets.token_hex(6)
             
             # create business object
             business = {
                 "_id": uuid.uuid4().hex,
                 "business_name" : business_name,
-                "business_id": business_id,
+                "business_id": BIZ_ID,
                 "employees": [],
                 "items": [],
-                "recipes": []
+                "recipes": [],
+                "jobs": []
             }
             
             # create employee object
@@ -65,8 +80,8 @@ class User:
             user["password"] = pbkdf2_sha256.encrypt(user['password'])
         
             db.businesses.insert_one(business)
-            if db.businesses.update_one({'business_id': business_id}, {'$push': {'employees': user}}):
-                return self.start_session(user, True, business_id)
+            if db.businesses.update_one({'business_id': BIZ_ID}, {'$push': {'employees': user}}):
+                return self.start_session(user, True, BIZ_ID)
             
         return jsonify( { "error": "Signup failed" } ), 400
     
