@@ -1,3 +1,4 @@
+from flask import session, jsonify
 from app import app
 from business.models import User
 
@@ -5,21 +6,33 @@ from business.models import User
 def signup():
     return User().signup()
 
-@app.route('/user/signout')
-def signout():
-    return User().signout()
+@app.route('/user/<business_id>/signout')
+def signout(business_id):
+    if business_id == session.get("business_id"):
+        return User().signout()
+    
+    else:
+        return jsonify({"error": "business id did not match"})
 
 @app.route('/user/login', methods=["POST"])
 def login():
     return User().login()
 
-@app.route('/user/create', methods=["POST"])
-def create():
-    return User().create_employee()
+@app.route('/user/<business_id>/create', methods=["POST"])
+def create(business_id):
+    if business_id == session.get("business_id"):
+        return User().create_employee()
+    
+    else:
+        return jsonify({"error": "business id did not match"})
 
-@app.route("/user/change-password", methods=["POST"])
-def change_password():
-    return User().change_password()
+@app.route("/user/<business_id>/change-password", methods=["POST"])
+def change_password(business_id):
+    if business_id == session.get("business_id"):
+        return User().change_password()
+    
+    else:
+        return jsonify({"error": "business id did not match"})
 
 # @app.route('/user/delete', methods=["POST"])
 # def delete():

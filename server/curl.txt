@@ -1,7 +1,7 @@
-curl -X POST -H "Content-Type: application/json" -d "{\"name\":\"John Doe\",\"email\":\"john@example.com\",\"password\":\"password123\",\"role\":\"employee\",\"business_id\":\"6bca9d8a6f77\"}" http://127.0.0.1:5000/user/create
+curl -X POST -H "Content-Type: application/json" -d "{\"name\":\"John Doe\",\"email\":\"john@example.com\",\"password\":\"password123\",\"role\":\"employee\",\"business_id\":\"BIZ01\"}" http://127.0.0.1:5000/user/create
 
-curl -X POST -H "Content-Type: application/json" -d "{\"business_id\":\"6bca9d8a6f77\",\"email\":\"john@example.com\",\"password\":\"password123\",\"role\":\"employee\"}" http://127.0.0.1:5000/user/login
+curl -X POST -H "Content-Type: application/json" -d "{\"business_id\":\"BIZ01\",\"email\":\"john@example.com\",\"password\":\"password123\",\"role\":\"employee\"}" http://127.0.0.1:5000/user/login
 
-curl -X POST -H "Content-Type: application/json" -d "{\"item_name\":\"Ekus\",\"quantity\":500,\"business_id\":\"6bca9d8a6f77\"}" http://127.0.0.1:5000/item/add
+curl -X POST -H "Content-Type: application/json" -d "{\"item_name\":\"Ekus\",\"quantity\":500,\"business_id\":\"BIZ01\"}" http://127.0.0.1:5000/item/add
 
 curl -X POST -H "Content-Type: application/json" -d "{\"email\":\"example@example.com\",\"name\":\"John Doe\",\"business\":\"My Business\",\"password\":\"your_password\"}" http://127.0.0.1:5000/user/signup

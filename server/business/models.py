@@ -40,7 +40,7 @@ class User:
 
         # update business number and push into json file
         data["BIZ_NO"] = BIZ_NO
-        data["BIZ_INFO"][BIZ_ID] = {'employee':1, 'items':0}
+        data["BIZ_INFO"][BIZ_ID] = {'employee':1, 'items':0, "products": 0,"jobs": 0}
         with open(info_file, 'w') as f:
             json.dump(data, f)
 
@@ -125,11 +125,11 @@ class User:
             data = json.load(f)
         
         if business_id in data['BIZ_INFO']:
-            employee_no = data['BIZ_INFO']['employee'] + 1
+            employee_no = data['BIZ_INFO'][business_id]['employee'] + 1
 
         employee_id = "EMP0" + str(employee_no)
 
-        data['BIZ_INFO']['employee'] = employee_no
+        data['BIZ_INFO'][business_id]['employee'] = employee_no
 
         with open(info_file, 'w') as f:
             json.dump(data, f)

@@ -17,7 +17,7 @@ URI = os.getenv('MONGO_URI')
 app.config["MONGO_URI"] = URI
 mongo = PyMongo(app)
 jwt = JWTManager(app)
-info_file = ""
+info_file = "BIZ_INFO.json"
 
 # Database
 client = MongoClient(URI , server_api=ServerApi('1'))
