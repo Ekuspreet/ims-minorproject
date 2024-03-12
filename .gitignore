@@ -196,3 +196,4 @@ cython_debug/
 #.idea/
 
 **/.env
+./server/BIZ_INFO.json 
