@@ -17,13 +17,14 @@ URI = os.getenv('MONGO_URI')
 app.config["MONGO_URI"] = URI
 mongo = PyMongo(app)
 jwt = JWTManager(app)
+info_file = ""
 
 # Database
 client = MongoClient(URI , server_api=ServerApi('1'))
 db = client.IMS_database
 
 # Routes
-from user import routes
+from business import routes
 from item import routes
 
 

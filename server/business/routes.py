@@ -1,5 +1,5 @@
 from app import app
-from user.models import User
+from business.models import User
 
 @app.route('/user/signup', methods=["POST"])
 def signup():
@@ -15,7 +15,7 @@ def login():
 
 @app.route('/user/create', methods=["POST"])
 def create():
-    return User().create_user()
+    return User().create_employee()
 
 @app.route("/user/change-password", methods=["POST"])
 def change_password():

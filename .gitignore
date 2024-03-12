@@ -197,4 +197,4 @@ cython_debug/
 
 **/.env
 
-**/BIZ_INFO.json
+BIZ_INFO.json

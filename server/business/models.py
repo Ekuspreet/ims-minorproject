@@ -2,8 +2,8 @@ from flask import jsonify, request, session
 from flask_jwt_extended import create_access_token
 from passlib.hash import pbkdf2_sha256
 from app import db
+from app import info_file
 import uuid
-import secrets
 import json
 
 
@@ -32,8 +32,7 @@ class User:
     def signup(self):
         
         # Extract the business number to assign to new business
-        file_path = "BIZ_INFO.json"
-        with open(file_path, 'r') as f:
+        with open(info_file, 'r') as f:
             data = json.load(f)
 
         BIZ_NO = data.get("BIZ_NO") + 1
@@ -42,7 +41,7 @@ class User:
         # update business number and push into json file
         data["BIZ_NO"] = BIZ_NO
         data["BIZ_INFO"][BIZ_ID] = {'employee':1, 'items':0}
-        with open(file_path, 'w') as f:
+        with open(info_file, 'w') as f:
             json.dump(data, f)
 
         # extract data from form request
@@ -70,7 +69,7 @@ class User:
             }
             
             # create employee object
-            user = {
+            employee = {
                 "employee_id" : employee_id,
                 "name" : name,
                 "email" : email,
@@ -78,11 +77,11 @@ class User:
                 "password" : password
             }
             
-            user["password"] = pbkdf2_sha256.encrypt(user['password'])
+            employee["password"] = pbkdf2_sha256.encrypt(employee['password'])
         
             db.businesses.insert_one(business)
-            if db.businesses.update_one({'business_id': BIZ_ID}, {'$push': {'employees': user}}):
-                return self.start_session(user, True, BIZ_ID)
+            if db.businesses.update_one({'business_id': BIZ_ID}, {'$push': {'employees': employee}}):
+                return self.start_session(employee, True, BIZ_ID)
             
         return jsonify( { "error": "Signup failed" } ), 400
     
@@ -102,32 +101,40 @@ class User:
         
         business = db.businesses.find_one({"business_id" : business_id})
         if not business:
-            return jsonify({"error": "business id does not exist"})
+            return jsonify({"error": "business id is invalid"})
         
-        user = next((emp for emp in business.get('employees', []) if emp['email'] == email), None)
+        employee = next((emp for emp in business.get('employees', []) if emp['email'] == email), None)
         
-        if user and pbkdf2_sha256.verify(password, user['password']) and (user["role"] == role):
-            return self.start_session(user, False, business_id)
+        if employee and pbkdf2_sha256.verify(password, employee['password']) and (employee["role"] == role):
+            return self.start_session(employee, False, business_id)
         
         return jsonify({
             "error": "Credentials not found"
         }), 401
         
         
-    def create_user(self):
-        
-        # print(session)
-        # if not session:
-        #     return jsonify({"error": "business id not in session"})
-        
-        employee_id = secrets.token_hex(6)
+    def create_employee(self):
+
         name = request.json["name"]
         email = request.json["email"]
         role = request.json["role"]
         password = request.json["password"]
-        business_id = request.json["business_id"]
+        business_id = request.json['business_id']
+
+        with open(info_file, 'r') as f:
+            data = json.load(f)
         
-        user = {
+        if business_id in data['BIZ_INFO']:
+            employee_no = data['BIZ_INFO']['employee'] + 1
+
+        employee_id = "EMP0" + str(employee_no)
+
+        data['BIZ_INFO']['employee'] = employee_no
+
+        with open(info_file, 'w') as f:
+            json.dump(data, f)
+
+        employee = {
             "employee_id": employee_id,
             "name" : name,
             "email": email,
@@ -135,15 +142,15 @@ class User:
             "role": role
         }
         
-        user["password"] = pbkdf2_sha256.encrypt(user['password'])
+        employee["password"] = pbkdf2_sha256.encrypt(employee['password'])
         
-        if db.businesses.count_documents({"business_id": business_id, "employees.email": user['email'] }):
+        if db.businesses.count_documents({"business_id": business_id, "employees.email": employee['email'] }):
             return "Email Already exists", 201
         else:
-            if db.businesses.update_one({'business_id': business_id}, {'$push': {'employees': user}}):
+            if db.businesses.update_one({'business_id': business_id}, {'$push': {'employees': employee}}):
                 return jsonify({"success" : True}), 200
             else:
-                return jsonify({"success": False, "message": "Failed to create user"}), 500
+                return jsonify({"success": False, "message": "Failed to create employee"}), 500
     
 
     def change_password(self):
@@ -151,11 +158,11 @@ class User:
         old_password = request.json["old_password"]
         new_password = request.json["new_password"]
         
-        user = db.businesses.find_one({
+        employee = db.businesses.find_one({
             "employees.employee_id": session["employee_id"]
         })
         
-        if user and pbkdf2_sha256.verify(old_password, user['password']):
+        if employee and pbkdf2_sha256.verify(old_password, employee['password']):
             
             new_password = pbkdf2_sha256.encrypt(new_password)
             db.businesses.update_one({"business_id": session["business_id"]}, {"employees.employee_id": session["employee_id"]}, {"$set": {"employees.$.password": new_password}})
