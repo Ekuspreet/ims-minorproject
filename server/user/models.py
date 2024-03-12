@@ -32,7 +32,7 @@ class User:
     def signup(self):
         
         # Extract the business number to assign to new business
-        file_path = "user\BIZ_NO.json"
+        file_path = "BIZ_INFO.json"
         with open(file_path, 'r') as f:
             data = json.load(f)
 
@@ -41,6 +41,7 @@ class User:
 
         # update business number and push into json file
         data["BIZ_NO"] = BIZ_NO
+        data["BIZ_INFO"][BIZ_ID] = {'employee':1, 'items':0}
         with open(file_path, 'w') as f:
             json.dump(data, f)
 
@@ -55,7 +56,7 @@ class User:
             return "Email Already exists", 201
         
         else:
-            employee_id = secrets.token_hex(6)
+            employee_id = 'EMP01'
             
             # create business object
             business = {

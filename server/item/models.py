@@ -28,9 +28,16 @@ class Item:
             
         return jsonify( { "error": " failed to add item" } ), 400
     
-    def display_items(self):
+    def fetch_items(self):
 
         items_list = []
         business_id = session["business_id"]
 
-        items_list = db.businesses
+        business = db.businesses.find_one({"business_id": business_id})
+
+        # Retrieve the items_list from the business document
+        if business:
+            items_list = business.get("items", [])
+            return jsonify({"success": True,"items_list": items_list})
+        else:
+            return jsonify({"success": False, "error": "Could not fetch items"})

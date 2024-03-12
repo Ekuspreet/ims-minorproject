@@ -5,6 +5,6 @@ from item.models import Item
 def add_item():
     return Item().add_item()
 
-@app.route("/item/remove", methods=["POST"])
-def remove_item():
-    return Item().remove_item()
+@app.route("/item/fetch", methods=["POST"])
+def fetch_items():
+    return Item().fetch_items()
