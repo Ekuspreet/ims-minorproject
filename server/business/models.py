@@ -1,9 +1,7 @@
 from flask import jsonify, request, session, json 
 from flask_jwt_extended import create_access_token
 from passlib.hash import pbkdf2_sha256
-from app import db
-from app import info_file
-import uuid
+from app import db, update_info_document
 
 
 class User:
@@ -30,18 +28,7 @@ class User:
     
     def signup(self):
         
-        # Extract the business number to assign to new business
-        with open(info_file, 'r') as f:
-            data = json.load(f)
-
-        BIZ_NO = data.get("BIZ_NO") + 1
-        BIZ_ID = "BIZ0" + str(BIZ_NO)
-
-        # update business number and push into json file
-        data["BIZ_NO"] = BIZ_NO
-        data["BIZ_INFO"][BIZ_ID] = {'employee':1, 'items':0, "products": 0,"jobs": 0}
-        with open(info_file, 'w') as f:
-            json.dump(data, f)
+        BIZ_ID = self.get_business_id()
 
         # extract data from form request
         business_name = request.json["business"]
@@ -58,9 +45,8 @@ class User:
             
             # create business object
             business = {
-                "_id": uuid.uuid4().hex,
+                "_id": BIZ_ID,
                 "business_name" : business_name,
-                "business_id": BIZ_ID,
                 "employees": [],
                 "items": [],
                 "recipes": [],
@@ -79,7 +65,18 @@ class User:
             employee["password"] = pbkdf2_sha256.encrypt(employee['password'])
         
             db.businesses.insert_one(business)
-            if db.businesses.update_one({'business_id': BIZ_ID}, {'$push': {'employees': employee}}):
+            
+            biz_info = {
+                BIZ_ID : {
+                    "employees": 1,
+                    "items": 0,
+                    "recipes":0,
+                    "jobs": 0
+                }
+            }
+            
+            if db.businesses.update_one({'_id': BIZ_ID}, {'$push': {'employees': employee}}):
+                db.BIZ_INFO.update_one({"_id": "INFO01"}, {"$push": {"BIZ_INFO": biz_info}})
                 return self.start_session(employee, True, BIZ_ID)
             
         return jsonify( { "error": "Signup failed" } ), 400
@@ -98,7 +95,7 @@ class User:
         password = request.json["password"]
         role = request.json["role"]
         
-        business = db.businesses.find_one({"business_id" : business_id})
+        business = db.businesses.find_one({"_id" : business_id})
         if not business:
             return jsonify({"error": "business id is invalid"})
         
@@ -120,18 +117,9 @@ class User:
         password = request.json["password"]
         business_id = request.json['business_id']
 
-        with open(info_file, 'r') as f:
-            data = json.load(f)
-        
-        if business_id in data['BIZ_INFO']:
-            employee_no = data['BIZ_INFO'][business_id]['employee'] + 1
+        # get employee id
 
-        employee_id = "EMP0" + str(employee_no)
-
-        data['BIZ_INFO'][business_id]['employee'] = employee_no
-
-        with open(info_file, 'w') as f:
-            json.dump(data, f)
+        employee_id = ""
 
         employee = {
             "employee_id": employee_id,
@@ -185,3 +173,12 @@ class User:
     #             return jsonify({ "error": "User not found" }), 404
     #     else:
     #         return jsonify({ "error": "User not logged in" }), 401
+        
+    def get_business_id(self):
+        data = db.BIZ_INFO.find_one({"_id": "INFO01"})
+        BIZ_NO = data["BIZ_NO"] + 1 
+
+        db.BIZ_INFO.update_one({"_id":"INFO01"}, {"$set": {"BIZ_NO": BIZ_NO + 1}})
+
+        return ("BIZ0" + str(BIZ_NO))
+    

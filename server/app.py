@@ -17,7 +17,6 @@ URI = os.getenv('MONGO_URI')
 app.config["MONGO_URI"] = URI
 mongo = PyMongo(app)
 jwt = JWTManager(app)
-info_file = "BIZ_INFO.json"
 
 # Database
 client = MongoClient(URI , server_api=ServerApi('1'))
@@ -25,8 +24,24 @@ db = client.IMS_database
 
 # Routes
 from business import routes
-from item import routes
+# from item import routes
 
+@app.route("/")
+def index():
+    business = {
+        "_id": "INFO01",
+        "BIZ_NO": 0,
+        "BIZ_INFO": {
+            "BIZ_ID": {
+                "users": 0,
+                "items": 0,
+                "recipes": 0,
+                "jobs": 0
+            }
+        }
+    }
+    db.BIZ_INFO.insert_one(business)
+    return "Ethe rakh"
 
 @app.route("/autoauthenticate")
 def autoauthenticate():
@@ -36,5 +51,28 @@ def autoauthenticate():
         return jsonify({'isLoggedIn': False})
 
     
+def update_info_document(business_id):
+    business = db.businesses.find_one({"_id": business_id})
+
+    num_employees = len(business["employees"])
+    num_items = len(business["items"])
+    num_recipes = len(business["recipes"])
+    num_jobs = len(business["jobs"])
+
+    BIZ_INFO = "BIZ_INFO"
+
+    db.BIZ_INFO.update_one(
+        {"_id": "INFO01"},
+        {
+            "$set": {
+                f"BIZ_INFO.{business_id}.employees": num_employees,
+                f"BIZ_INFO.{business_id}.items": num_items,
+                f"BIZ_INFO.{business_id}.recipes": num_recipes,
+                f"BIZ_INFO.{business_id}.jobs": num_jobs,
+            }
+        }
+    )
+
+
 if __name__ == "__main__":
     app.run(debug=True)
