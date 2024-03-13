@@ -18,14 +18,10 @@ def signout(business_id):
 def login():
     return User().login()
 
-@app.route('/user/<business_id>/create', methods=["POST"])
-def create(business_id):
-    if business_id == session.get("business_id"):
-        return User().create_employee()
+@app.route('/user/create', methods=["POST"])
+def create():
+    return User().create_employee()
     
-    else:
-        return jsonify({"error": "business id did not match"})
-
 @app.route("/user/<business_id>/change-password", methods=["POST"])
 def change_password(business_id):
     if business_id == session.get("business_id"):

@@ -1,8 +1,7 @@
 from flask import jsonify, request, session, json 
 from flask_jwt_extended import create_access_token
 from passlib.hash import pbkdf2_sha256
-from app import db, update_info_document
-
+from app import db
 
 class User:
 
@@ -125,11 +124,10 @@ class User:
         
         employee["password"] = pbkdf2_sha256.encrypt(employee['password'])
         
-        if db.businesses.count_documents({"business_id": business_id, "employees.email": employee['email'] }):
+        if db.businesses.count_documents({"_id": business_id, "employees.email": employee['email'] }):
             return "Email Already exists", 201
         else:
-            if db.businesses.update_one({'business_id': business_id}, {'$push': {'employees': employee}}):
-                update_info_document(business_id)
+            if db.businesses.update_one({'_id': business_id}, {'$push': {'employees': employee}}):
                 return jsonify({"success" : True}), 200
             else:
                 return jsonify({"success": False, "message": "Failed to create employee"}), 500
@@ -147,7 +145,7 @@ class User:
         if employee and pbkdf2_sha256.verify(old_password, employee['password']):
             
             new_password = pbkdf2_sha256.encrypt(new_password)
-            db.businesses.update_one({"business_id": session["business_id"]}, {"employees.employee_id": session["employee_id"]}, {"$set": {"employees.$.password": new_password}})
+            db.businesses.update_one({"_id": session["business_id"]}, {"employees.employee_id": session["employee_id"]}, {"$set": {"employees.$.password": new_password}})
             return jsonify({"success": True, "message": "Password changed successfully"}), 200
         
         else:
@@ -170,16 +168,10 @@ class User:
     #         return jsonify({ "error": "User not logged in" }), 401
         
     def get_business_id(self):
-        data = db.BIZ_INFO.find_one({"_id": "INFO01"})
-        BIZ_NO = data["BIZ_NO"] + 1 
-
-        db.BIZ_INFO.update_one({"_id":"INFO01"}, {"$set": {"BIZ_NO": BIZ_NO + 1}})
-
+        BIZ_NO = db.businesses.count_documents({}) + 1
         return ("BIZ0" + str(BIZ_NO))
     
-    def get_employee_id(business_id):
-
+    def get_employee_id(self, business_id):
         business = db.businesses.find_one({"_id": business_id})
-        EMP_NO = len(business["employees"])
-
+        EMP_NO = len(business["employees"]) + 1
         return ("EMP0" + str(EMP_NO))

@@ -24,7 +24,7 @@ db = client.IMS_database
 
 # Routes
 from business import routes
-# from item import routes
+from item import routes
 
 @app.route("/autoauthenticate")
 def autoauthenticate():
@@ -32,29 +32,6 @@ def autoauthenticate():
         return jsonify({'isLoggedIn': True})
     else:
         return jsonify({'isLoggedIn': False})
-
-    
-def update_info_document(business_id):
-    business = db.businesses.find_one({"_id": business_id})
-
-    num_employees = len(business["employees"])
-    num_items = len(business["items"])
-    num_recipes = len(business["recipes"])
-    num_jobs = len(business["jobs"])
-
-    BIZ_INFO = "BIZ_INFO"
-
-    db.BIZ_INFO.update_one(
-        {"_id": "INFO01"},
-        {
-            "$set": {
-                f"BIZ_INFO.{business_id}.employees": num_employees,
-                f"BIZ_INFO.{business_id}.items": num_items,
-                f"BIZ_INFO.{business_id}.recipes": num_recipes,
-                f"BIZ_INFO.{business_id}.jobs": num_jobs,
-            }
-        }
-    )
 
 
 if __name__ == "__main__":
