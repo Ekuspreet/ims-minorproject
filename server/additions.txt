@@ -1,5 +1,0 @@
-These things are still needed to be changed or added in existing app.
-
-JWT has to be decrypted on the earliest
-
-Business id should be taken from session in Items_add, create_user
