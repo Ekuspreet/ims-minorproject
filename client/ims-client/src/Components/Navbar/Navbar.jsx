@@ -14,7 +14,7 @@ const Navbar = () => {
   <div className="navbar-start">
     <div className="dropdown">
       <button tabIndex={0} role="button" className="btn btn-ghost md:hidden">
-      <span class="material-symbols-outlined">
+      <span className="material-symbols-outlined">
 menu
 </span>
       </button>

@@ -15,6 +15,7 @@ const Landing = () => {
     const fetchData = async () => {
       const response = await axios.get("/api/autoauthenticate");
       setIsLoggedIn(response.data.isLoggedIn);
+      console.log("Is u logged in ?",response.data.isLoggedIn)
     };
   
     fetchData();
