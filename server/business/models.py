@@ -117,9 +117,7 @@ class User:
         password = request.json["password"]
         business_id = request.json['business_id']
 
-        # get employee id
-
-        employee_id = ""
+        employee_id = self.get_employee_id(business_id)
 
         employee = {
             "employee_id": employee_id,
@@ -135,6 +133,7 @@ class User:
             return "Email Already exists", 201
         else:
             if db.businesses.update_one({'business_id': business_id}, {'$push': {'employees': employee}}):
+                update_info_document(business_id)
                 return jsonify({"success" : True}), 200
             else:
                 return jsonify({"success": False, "message": "Failed to create employee"}), 500
@@ -182,3 +181,9 @@ class User:
 
         return ("BIZ0" + str(BIZ_NO))
     
+    def get_employee_id(business_id):
+
+        business = db.businesses.find_one({"_id": business_id})
+        EMP_NO = len(business["employees"])
+
+        return ("EMP0" + str(EMP_NO))
