@@ -26,23 +26,6 @@ db = client.IMS_database
 from business import routes
 # from item import routes
 
-@app.route("/")
-def index():
-    business = {
-        "_id": "INFO01",
-        "BIZ_NO": 0,
-        "BIZ_INFO": {
-            "BIZ_ID": {
-                "users": 0,
-                "items": 0,
-                "recipes": 0,
-                "jobs": 0
-            }
-        }
-    }
-    db.BIZ_INFO.insert_one(business)
-    return "Ethe rakh"
-
 @app.route("/autoauthenticate")
 def autoauthenticate():
     if "logged_in" in session:
