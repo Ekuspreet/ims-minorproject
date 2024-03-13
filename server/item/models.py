@@ -10,16 +10,7 @@ class Item:
         quantity = float(request.json["quantity"])
         business_id = request.json["business_id"]
 
-        with open(info_file, 'r') as f:
-            data = json.load(f)
-
-        item_no = data["BIZ_INFO"][business_id]["items"] + 1
-        item_id = "ITEM0" + str(item_no)
-
-        data["BIZ_INFO"][business_id]["items"] = item_no
-
-        with open(info_file, 'w') as f:
-            json.dump(data, f)
+        item_id = self.get_item_id(business_id)
 
         if db.businesses.count_documents({"business_id" : business_id, "items": {"$elemMatch": {"item_id": item_id}}}):
             return jsonify({"error": "Item already present"})
@@ -58,16 +49,13 @@ class Item:
         if db.businesses.count_documents({"business_id": business_id, "items.item_id": item_id}):
 
             if db.businesses.delete_one({"business_id": business_id, "items.item_id": item_id}):
-                with open(info_file, 'r') as f:
-                    data = json.load(f)
-
-                item_no = data["BIZ_INFO"][business_id]["items"] - 1
-                data["BIZ_INFO"][business_id]["items"] = item_no
-
-                with open(info_file, 'w') as f:
-                    json.dump(data, f)
-
                 return jsonify({"success": "Item has been deleted"})
             
             else:
                 return jsonify({"error": "Could not delete item"})
+            
+
+    def get_item_id(self, business_id):
+        business = db.businesses.find_one({"_id": business_id})
+        ITEM_NO = len(business["items"]) + 1
+        return ("EMP0" + str(ITEM_NO))
