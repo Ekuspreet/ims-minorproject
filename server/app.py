@@ -24,7 +24,7 @@ db = client.IMS_database
 
 # Routes
 from business import routes
-# from item import routes
+from item import routes
 
 @app.route("/autoauthenticate")
 def autoauthenticate():
