@@ -9,13 +9,13 @@ def update_info_document(business_id):
     num_jobs = len(business["jobs"])
     
     db.BIZ_INFO.update_one(
-        {"_id": "INFO01"},
+        {"_id": "INFO01", "BIZ_INFO.id": business_id},
         {
             "$set": {
-                f"BIZ_INFO.{business_id}.employees": num_employees,
-                f"BIZ_INFO.{business_id}.items": num_items,
-                f"BIZ_INFO.{business_id}.recipes": num_recipes,
-                f"BIZ_INFO.{business_id}.jobs": num_jobs,
+                "BIZ_INFO.$.employees": num_employees,
+                "BIZ_INFO.$.items": num_items,
+                "BIZ_INFO.$.recipes": num_recipes,
+                "BIZ_INFO.$.jobs": num_jobs,
             }
         }
     )
