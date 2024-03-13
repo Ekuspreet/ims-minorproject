@@ -12,7 +12,7 @@ const NavbarProfile = ({ toggler }) => {
                 <div className="navbar-start">
 
                     <label tabIndex={0} htmlFor="my-drawer" role="button" className="btn btn-ghost drawer-button " onClick={toggler}>
-                        <span class="material-symbols-outlined">
+                        <span className="material-symbols-outlined">
                             menu
                         </span>
                     </label>
@@ -46,7 +46,7 @@ const NavbarProfile = ({ toggler }) => {
                             <div className="modal-action">
                                 <form method="dialog">
                                     {/* if there is a button in form, it will close the modal */}
-                                    <button className="btn">Close</button>
+                                    <button className="btn btn-error">Log Out</button>
                                 </form>
                             </div>
                         </div>
