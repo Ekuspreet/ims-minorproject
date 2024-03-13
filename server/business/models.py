@@ -1,7 +1,8 @@
 from flask import jsonify, request, session, json 
 from flask_jwt_extended import create_access_token
 from passlib.hash import pbkdf2_sha256
-from app import db, update_info_document
+from app import db
+from BIZ_INFO.update_info import update_info_document
 
 
 class User:
@@ -72,7 +73,7 @@ class User:
             }
             
             if db.businesses.update_one({'_id': BIZ_ID}, {'$push': {'employees': employee}}):
-                db.BIZ_INFO.update_one({"_id": "INFO01"}, {"$push": {"BIZ_INFO": biz_info}})
+                db.BIZ_INFO.update_one({"_id": "INFO01"}, {"$set": {"BIZ_INFO": [biz_info]}})
                 return self.start_session(employee)
             
         return jsonify( { "error": "Signup failed" } ), 400
@@ -173,7 +174,7 @@ class User:
         data = db.BIZ_INFO.find_one({"_id": "INFO01"})
         BIZ_NO = data["BIZ_NO"] + 1 
 
-        db.BIZ_INFO.update_one({"_id":"INFO01"}, {"$set": {"BIZ_NO": BIZ_NO + 1}})
+        db.BIZ_INFO.update_one({"_id":"INFO01"}, {"$set": {"BIZ_NO": BIZ_NO}})
 
         return ("BIZ0" + str(BIZ_NO))
     
