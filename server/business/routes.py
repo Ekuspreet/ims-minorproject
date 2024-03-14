@@ -21,6 +21,14 @@ def login():
 @app.route('/user/create', methods=["POST"])
 def create():
     return Business().create_employee()
+
+@app.route("/business/<business_id>/fetch_employees")
+def fetch_employees(business_id):
+    if business_id == session.get("business_id"):
+        return Business().fetch_employees()
+    
+    else:
+        return jsonify({"error": "business id did not match"})
     
 @app.route("/user/<business_id>/change-password", methods=["POST"])
 def change_password(business_id):

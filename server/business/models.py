@@ -11,6 +11,7 @@ class Business:
         session['logged_in'] = True
         
         session['user'] = user
+        session["business_id"] = business_id
         
         additional_claims = {
             "name": user["name"],
@@ -128,6 +129,19 @@ class Business:
                 return jsonify({"success": False, "message": "Failed to create employee"}), 500
     
 
+    def fetch_employees(self):
+        employee_list = []
+        business_id = session["business_id"]
+
+        business = db.businesses.find_one({"business_id": business_id})
+
+        # Retrieve the employee_list from the business document
+        if business:
+            employee_list = business.get("employees", [])
+            return jsonify({"success": True,"employee_list": employee_list})
+        else:
+            return jsonify({"success": False, "error": "Could not fetch employees"})
+    
     def change_password(self):
         
         old_password = request.json["old_password"]
