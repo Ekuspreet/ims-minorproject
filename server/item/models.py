@@ -3,11 +3,10 @@ from app import db
 
 class Item:
     
-    def add_item(self):
+    def add_item(self, business_id):
         
         item_name = request.json["item_name"]
         quantity = float(request.json["quantity"])
-        business_id = request.json["business_id"]
 
         item_id = self.get_item_id(business_id)
 
@@ -28,10 +27,9 @@ class Item:
             
         return jsonify( { "error": " failed to add item" } ), 400
     
-    def fetch_items(self):
+    def fetch_items(self, business_id):
 
         items_list = []
-        business_id = session["business_id"]
 
         business = db.businesses.find_one({"business_id": business_id})
 
@@ -42,9 +40,8 @@ class Item:
         else:
             return jsonify({"success": False, "error": "Could not fetch items"})
         
-    def delete_item(self, item_id):
+    def delete_item(self, business_id, item_id):
 
-        business_id = session.get("business_id")
         if db.businesses.count_documents({"business_id": business_id, "items.item_id": item_id}):
 
             if db.businesses.delete_one({"business_id": business_id, "items.item_id": item_id}):

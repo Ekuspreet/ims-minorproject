@@ -6,39 +6,33 @@ from business.models import Business
 def signup():
     return Business().signup()
 
+
 @app.route('/user/<business_id>/signout')
 def signout(business_id):
-    if business_id == session.get("business_id"):
-        return Business().signout()
+    return Business().signout()
     
-    else:
-        return jsonify({"error": "business id did not match"})
 
 @app.route('/user/login', methods=["POST"])
 def login():
     return Business().login()
 
-@app.route('/user/create', methods=["POST"])
-def create():
-    return Business().create_employee()
+
+@app.route('/user/<business_id>/add_employee', methods=["POST"])
+def create(business_id):
+    return Business().add_employee(business_id)
+
 
 @app.route("/business/<business_id>/fetch_employees")
 def fetch_employees(business_id):
-    if business_id == session.get("business_id"):
-        return Business().fetch_employees()
+    return Business().fetch_employees(business_id)
     
-    else:
-        return jsonify({"error": "business id did not match"})
-    
-@app.route("/user/<business_id>/change-password", methods=["POST"])
-def change_password(business_id):
-    if business_id == session.get("business_id"):
-        return Business().change_password()
-    
-    else:
-        return jsonify({"error": "business id did not match"})
 
-# @app.route('/user/delete', methods=["POST"])
-# def delete():
-#     return Business().delete_user()
+@app.route("/user/<business_id>/<employee_id>/change-password", methods=["POST"])
+def change_password(business_id, employee_id):
+    return Business().change_password(business_id, employee_id)
+    
+
+@app.route('/user/<business_id>/<employee_id>/remove', methods=["POST"])
+def delete(business_id, employee_id):
+    return Business().remove_employee(business_id, employee_id)
 

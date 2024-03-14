@@ -100,13 +100,12 @@ class Business:
         }), 401
         
         
-    def create_employee(self):
+    def add_employee(self, business_id):
 
         name = request.json["name"]
         email = request.json["email"]
         role = request.json["role"]
         password = request.json["password"]
-        business_id = request.json['business_id']
 
         employee_id = self.get_employee_id(business_id)
 
@@ -129,9 +128,8 @@ class Business:
                 return jsonify({"success": False, "message": "Failed to create employee"}), 500
     
 
-    def fetch_employees(self):
+    def fetch_employees(self, business_id):
         employee_list = []
-        business_id = session["business_id"]
 
         business = db.businesses.find_one({"business_id": business_id})
 
@@ -142,13 +140,13 @@ class Business:
         else:
             return jsonify({"success": False, "error": "Could not fetch employees"})
     
-    def change_password(self):
+    def change_password(self, business_id, employee_id):
         
         old_password = request.json["old_password"]
         new_password = request.json["new_password"]
         
         employee = db.businesses.find_one({
-            "employees.employee_id": session["employee_id"]
+            "employees.employee_id": employee_id
         })
         
         if employee and pbkdf2_sha256.verify(old_password, employee['password']):
@@ -160,22 +158,17 @@ class Business:
         else:
             return jsonify({"success": False, "message": "Password does not match"}), 401
                 
-    # def delete_user(self):
-    #     if 'user' in session:
-    #         user_id = session['user']['_id']
-    #         # Find the user in the database
-    #         user = db.users.find_one({ "_id": user_id })
+    
+    def remove_employee(self, business_id, employee_id):
+
+        if db.businesses.count_documents({"business_id": business_id, "employees.employee_id": employee_id}):
+
+            if db.businesses.delete_one({"business_id": business_id, "employees.employee_id": employee_id}):
+                return jsonify({"success": "Employee has been removed"})
             
-    #         # If user found, delete it
-    #         if user:
-    #             db.users.delete_one({ "_id": user_id })
-    #             session.clear()  # Clear the session after deleting the user
-    #             return jsonify({ "message": "User deleted successfully" }), 200
-    #         else:
-    #             return jsonify({ "error": "User not found" }), 404
-    #     else:
-    #         return jsonify({ "error": "User not logged in" }), 401
-        
+            else:
+                return jsonify({"error": "Could not remove employee"})
+                    
     def get_business_id(self):
 
         try:
