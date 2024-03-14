@@ -109,6 +109,9 @@ class Business:
 
         employee_id = self.get_employee_id(business_id)
 
+        if employee_id == None:
+            return jsonify({"Error": "Business Id is not correct"})
+
         employee = {
             "employee_id": employee_id,
             "name" : name,
@@ -131,12 +134,17 @@ class Business:
     def fetch_employees(self, business_id):
         employee_list = []
 
-        business = db.businesses.find_one({"business_id": business_id})
+        business = db.businesses.find_one({"_id": business_id})
 
         # Retrieve the employee_list from the business document
         if business:
             employee_list = business.get("employees", [])
-            return jsonify({"success": True,"employee_list": employee_list})
+            employees_info = []
+            for emp in employee_list:
+                employee_info = {"name": emp["name"], "employee_id": emp["employee_id"], "role": emp["role"]}
+                employees_info.append(employee_info)
+
+            return jsonify({"success": True,"employee_list": employees_info})
         else:
             return jsonify({"success": False, "error": "Could not fetch employees"})
     
@@ -145,28 +153,35 @@ class Business:
         old_password = request.json["old_password"]
         new_password = request.json["new_password"]
         
-        business = db.businesses.count_documents({"business_id": business_id, "employees.employee_id": employee_id})
+        business = db.businesses.find_one({"_id": business_id, "employees.employee_id": employee_id})
         
-        employee = next((emp for emp in business["employees"] if emp["employee_id"] == employee_id), None)
-
-        if employee:
-            if pbkdf2_sha256.verify(employee["password"], old_password):
-                db.businesses.update_one({ "_id": business_id, "employees.employee_id": employee_id }, { "$set": { "employees.$.password": new_password}})
-                return jsonify({"success": True, "message": "Password has been updated"})
-            
-            else:
-                return jsonify({"success": False, "message": "Password is incorrect"})
+        for employee in business["employees"]:
+            if employee["employee_id"] == employee_id:
+                if pbkdf2_sha256.verify(old_password, employee["password"]):
+                    new_password = pbkdf2_sha256.encrypt(new_password)
+                    db.businesses.update_one({ "_id": business_id, "employees.employee_id": employee_id }, { "$set": { "employees.$.password": new_password}})
+                    return jsonify({"success": True, "message": "Password has been updated"})
                 
+                else:
+                    return jsonify({"success": False, "message": "Password is incorrect"})
+            
     
     def remove_employee(self, business_id, employee_id):
 
-        if db.businesses.count_documents({"business_id": business_id, "employees.employee_id": employee_id}):
-
-            if db.businesses.delete_one({"business_id": business_id, "employees.employee_id": employee_id}):
+        if db.businesses.count_documents({"_id": business_id, "employees.employee_id": employee_id}):
+            result = db.businesses.update_one(
+                {"_id": business_id},
+                {"$pull": {"employees": {"employee_id": employee_id}}}
+            )
+            
+            if result.modified_count == 1:
                 return jsonify({"success": "Employee has been removed"})
             
             else:
                 return jsonify({"error": "Could not remove employee"})
+        
+        else:
+            return jsonify({"error": "Employee not found"})
                     
     def get_business_id(self):
 
@@ -187,6 +202,10 @@ class Business:
     
     def get_employee_id(self, business_id):
         business = db.businesses.find_one({"_id": business_id})
-        EMP_NO = business["emp_no"] + 1
-        db.businesses.update_one({"_id": business_id}, {"$set": {"emp_no": EMP_NO}})
-        return ("EMP0" + str(EMP_NO))
+        if business:
+            EMP_NO = business["emp_no"] + 1
+            db.businesses.update_one({"_id": business_id}, {"$set": {"emp_no": EMP_NO}})
+            return ("EMP0" + str(EMP_NO))
+        
+        else:
+            return None

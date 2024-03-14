@@ -1,7 +1,17 @@
-curl -X POST -H "Content-Type: application/json" -d "{\"name\":\"John Doe\",\"email\":\"john@example.com\",\"password\":\"password123\",\"role\":\"employee\",\"business_id\":\"BIZ01\"}" http://127.0.0.1:5000/user/create
-
-curl -X POST -H "Content-Type: application/json" -d "{\"business_id\":\"BIZ01\",\"email\":\"john@example.com\",\"password\":\"password123\",\"role\":\"employee\"}" http://127.0.0.1:5000/user/login
-
-curl -X POST -H "Content-Type: application/json" -d "{\"item_name\":\"Ekus\",\"quantity\":500,\"business_id\":\"BIZ01\"}" http://127.0.0.1:5000/item/add
-
 curl -X POST -H "Content-Type: application/json" -d "{\"email\":\"example@example.com\",\"name\":\"John Doe\",\"business\":\"My Business\",\"password\":\"your_password\"}" http://127.0.0.1:5000/user/signup
+
+curl -X POST -H "Content-Type: application/json" -d "{\"name\":\"John Doe\", \"email\":\"johndoe@example.com\", \"role\":\"employee\", \"password\":\"secretpassword\"}" http://127.0.0.1:5000/user/BIZ01/add_employee
+
+curl -X POST -H "Content-Type: application/json" -d "{\"business_id\":\"BIZ01\", \"email\":\"johndoe@example.com\", \"password\":\"secretpassword\", \"role\":\"employee\"}" http://127.0.0.1:5000/user/login
+
+curl -X GET http://127.0.0.1:5000/business/BIZ01/fetch_employees
+
+curl -X POST http://127.0.0.1:5000/user/BIZ01/EMP02/remove
+
+curl -X POST -H "Content-Type: application/json" -d "{\"old_password\":\"secretpassword\", \"new_password\":\"new_password\"}" http://127.0.0.1:5000/user/BIZ01/EMP02/change-password
+
+curl -X POST -H "Content-Type: application/json" -d "{\"item_name\":\"Product A\", \"quantity\": 10}" http://127.0.0.1:5000/item/BIZ01/add
+
+curl -X POST -H "Content-Type: application/json" http://127.0.0.1:5000/item/BIZ01/fetch
+
+curl -X POST -H "Content-Type: application/json" http://127.0.0.1:5000/item/BIZ01/ITEM02/delete

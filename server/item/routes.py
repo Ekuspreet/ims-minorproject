@@ -14,4 +14,4 @@ def fetch_items(business_id):
     
 @app.route("/item/<business_id>/<item_id>/delete", methods=["POST"])
 def delete_item(business_id, item_id):
-    return Item.delete_item(business_id, item_id)
+    return Item().delete_item(business_id, item_id)
