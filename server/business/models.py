@@ -145,18 +145,17 @@ class Business:
         old_password = request.json["old_password"]
         new_password = request.json["new_password"]
         
-        employee = db.businesses.find_one({
-            "employees.employee_id": employee_id
-        })
+        business = db.businesses.count_documents({"business_id": business_id, "employees.employee_id": employee_id})
         
-        if employee and pbkdf2_sha256.verify(old_password, employee['password']):
+        employee = next((emp for emp in business["employees"] if emp["employee_id"] == employee_id), None)
+
+        if employee:
+            if pbkdf2_sha256.verify(employee["password"], old_password):
+                db.businesses.update_one({ "_id": business_id, "employees.employee_id": employee_id }, { "$set": { "employees.$.password": new_password}})
+                return jsonify({"success": True, "message": "Password has been updated"})
             
-            new_password = pbkdf2_sha256.encrypt(new_password)
-            db.businesses.update_one({"_id": session["business_id"]}, {"employees.employee_id": session["employee_id"]}, {"$set": {"employees.$.password": new_password}})
-            return jsonify({"success": True, "message": "Password changed successfully"}), 200
-        
-        else:
-            return jsonify({"success": False, "message": "Password does not match"}), 401
+            else:
+                return jsonify({"success": False, "message": "Password is incorrect"})
                 
     
     def remove_employee(self, business_id, employee_id):
