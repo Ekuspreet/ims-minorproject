@@ -57,5 +57,6 @@ class Item:
 
     def get_item_id(self, business_id):
         business = db.businesses.find_one({"_id": business_id})
-        ITEM_NO = len(business["items"]) + 1
-        return ("EMP0" + str(ITEM_NO))
+        ITEM_NO = business["item_no"] + 1
+        db.businesses.update_one({"_id": business_id}, {"$set": {"item_no": ITEM_NO}})
+        return ("ITEM0" + str(ITEM_NO))

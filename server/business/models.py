@@ -3,7 +3,7 @@ from flask_jwt_extended import create_access_token
 from passlib.hash import pbkdf2_sha256
 from app import db
 
-class User:
+class Business:
 
     def start_session(self, user, business_id):
         
@@ -43,6 +43,10 @@ class User:
             business = {
                 "_id": BIZ_ID,
                 "business_name" : business_name,
+                "emp_no": 1,
+                "item_no": 0,
+                "recipe_no": 0,
+                "job_no": 0,
                 "employees": [],
                 "items": [],
                 "recipes": [],
@@ -62,17 +66,7 @@ class User:
         
             db.businesses.insert_one(business)
             
-            biz_info = {
-                BIZ_ID : {
-                    "employees": 1,
-                    "items": 0,
-                    "recipes":0,
-                    "jobs": 0
-                }
-            }
-            
             if db.businesses.update_one({'_id': BIZ_ID}, {'$push': {'employees': employee}}):
-                db.BIZ_INFO.update_one({"_id": "INFO01"}, {"$push": {"BIZ_INFO": biz_info}})
                 return self.start_session(employee, BIZ_ID)
             
         return jsonify( { "error": "Signup failed" } ), 400
@@ -169,10 +163,24 @@ class User:
     #         return jsonify({ "error": "User not logged in" }), 401
         
     def get_business_id(self):
-        BIZ_NO = db.businesses.count_documents({}) + 1
+
+        try:
+            data = db.businesses.find_one({"_id": "INFO01"})
+            BIZ_NO = data["BIZ_NO"] + 1
+            db.businesses.update_one({"_id": "INFO01"}, {"$set": {"BIZ_NO": BIZ_NO}})
+
+        except:
+            biz_info = {
+                "_id": "INFO01",
+                "BIZ_NO": 1
+            }
+            db.businesses.insert_one(biz_info)
+            BIZ_NO = 1
+
         return ("BIZ0" + str(BIZ_NO))
     
     def get_employee_id(self, business_id):
         business = db.businesses.find_one({"_id": business_id})
-        EMP_NO = len(business["employees"]) + 1
+        EMP_NO = business["emp_no"] + 1
+        db.businesses.update_one({"_id": business_id}, {"$set": {"emp_no": EMP_NO}})
         return ("EMP0" + str(EMP_NO))
