@@ -1,6 +1,5 @@
-from flask import jsonify, request, session, json
+from flask import jsonify, request, session
 from app import db
-from passlib.hash import pbkdf2_sha256
 
 class Item:
     

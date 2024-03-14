@@ -1,4 +1,4 @@
-from flask import jsonify, request, session, json 
+from flask import jsonify, request, session
 from flask_jwt_extended import create_access_token
 from passlib.hash import pbkdf2_sha256
 from app import db
