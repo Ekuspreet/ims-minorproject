@@ -5,7 +5,7 @@ from app import db
 
 class User:
 
-    def start_session(self, user):
+    def start_session(self, user, business_id):
         
         del user["password"]
         session['logged_in'] = True
@@ -14,7 +14,8 @@ class User:
         
         additional_claims = {
             "name": user["name"],
-            "role": user["role"]
+            "role": user["role"],
+            "business_id": business_id
         }
         
         jwt_token = create_access_token(identity=user["name"], additional_claims = additional_claims)
@@ -72,7 +73,7 @@ class User:
             
             if db.businesses.update_one({'_id': BIZ_ID}, {'$push': {'employees': employee}}):
                 db.BIZ_INFO.update_one({"_id": "INFO01"}, {"$push": {"BIZ_INFO": biz_info}})
-                return self.start_session(employee)
+                return self.start_session(employee, BIZ_ID)
             
         return jsonify( { "error": "Signup failed" } ), 400
     
@@ -97,7 +98,7 @@ class User:
         employee = next((emp for emp in business.get('employees', []) if emp['email'] == email), None)
         
         if employee and pbkdf2_sha256.verify(password, employee['password']) and (employee["role"] == role):
-            return self.start_session(employee)
+            return self.start_session(employee, business_id)
         
         return jsonify({
             "error": "Credentials not found"
