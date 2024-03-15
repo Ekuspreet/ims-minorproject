@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
 import NavbarSignup from '../Components/Navbar/NavbarSignup'
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import {jwtDecode} from 'jwt-decode'
 const SignUp = () => {
-
+    const navigate = useNavigate()
     const [signUpData,setSignUpData] = useState({
     })
 
@@ -23,13 +25,17 @@ const SignUp = () => {
     
             const response = await axios.post("/api/user/signup", signUpData);
     
-            // Handle the successful response
-            console.log("Response:", response.data);
+            console.log("Response:", response.data.jwt_token);
+            const user = jwtDecode(response.data.jwt_token);
+            const name = user.name;
+            navigate('/profile', {state : { username : name } })
+
+            console.log(user)
         } catch (error) {
-            // Handle errors
+       
             console.error("Error:", error);
     
-            // You may want to do additional error handling here, such as displaying an error message to the user
+            
         }
     }
     

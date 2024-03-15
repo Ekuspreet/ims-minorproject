@@ -2,7 +2,8 @@ import React from 'react'
 import Bicon from '../../assets/icon.png'
 import { Link } from 'react-router-dom'
 import { useState } from 'react';
-const NavbarProfile = ({ toggler }) => {
+
+const NavbarProfile = ({ toggler, user, logout }) => {
 
     return (
         <>
@@ -26,7 +27,7 @@ const NavbarProfile = ({ toggler }) => {
                 <div className="navbar-center hidden md:flex">
 
                     <ul className="menu menu-horizontal px-1">
-                        <li className='text-2xl '>Welcome Back {"User"} </li>
+                        <li className='text-2xl '>Welcome Back {user} </li>
                     </ul>
                 </div>
 
@@ -46,7 +47,7 @@ const NavbarProfile = ({ toggler }) => {
                             <div className="modal-action">
                                 <form method="dialog">
                                     {/* if there is a button in form, it will close the modal */}
-                                    <button className="btn btn-error">Log Out</button>
+                                    <button className="btn btn-error" onClick={logout}>Log Out</button>
                                 </form>
                             </div>
                         </div>
@@ -62,7 +63,7 @@ const NavbarProfile = ({ toggler }) => {
 
                 <div className="navbar-center">
 
-                    <p className='text-2xl text-center '>Welcome Back <br /> {"User"} </p>
+                    <p className='text-2xl text-center '>Welcome Back <br /> {user} </p>
                 </div>
 
                 <div className="navbar-end"></div>

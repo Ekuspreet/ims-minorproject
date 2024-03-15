@@ -1,4 +1,6 @@
 import { React, useState } from 'react'
+
+import { useLocation, useNavigate } from 'react-router-dom';
 import NavbarProfile from '../Components/Navbar/NavbarProfile'
 import Alertbox from '../Components/Alerts/Alertbox';
 
@@ -7,25 +9,31 @@ import Employees from '../Components/Profile/Employees';
 import InventoryItems from '../Components/Profile/InventoryItems';
 import Recipes from '../Components/Profile/Recipes';
 import Drawer from '../Components/Profile/Drawer';
+import axios from 'axios';
 
 
 
 const Profile = () => {
 
-
+  const location = useLocation()
+  const navigate = useNavigate()
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const [tab, setTab] = useState('Activejobs')
   const toggle = () => { setDrawerOpen(!isDrawerOpen) }
-
+  // console.log(location)
+  async function logout(){
+    // const response = await axios.post("/api/user/signup", signUpData);
+    navigate('/')
+  }
   return (
 
 
     <>
       <Drawer toggle = {toggle} setTab = {setTab} isDrawerOpen={isDrawerOpen} >
 
-        <NavbarProfile toggler={toggle} />
+        <NavbarProfile toggler={toggle} user = {location.state.username} logout = {logout} />
 
-        <div className="main-content flex justify-between p-10 gap-8 ">
+        <div className="main-content flex flex-col md:flex-row justify-between p-10 gap-8 ">
 
 
           <div className="section w-full">
