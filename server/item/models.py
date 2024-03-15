@@ -1,14 +1,12 @@
-from flask import jsonify, request, session, json
+from flask import jsonify, request, session
 from app import db
-from passlib.hash import pbkdf2_sha256
 
 class Item:
     
-    def add_item(self):
+    def add_item(self, business_id):
         
         item_name = request.json["item_name"]
         quantity = float(request.json["quantity"])
-        business_id = request.json["business_id"]
 
         item_id = self.get_item_id(business_id)
 
@@ -24,17 +22,16 @@ class Item:
                 "quantity": quantity
             } 
             
-            if db.businesses.update_one({"business_id":business_id}, {"$push" : {"items": item}}):
+            if db.businesses.update_one({"_id":business_id}, {"$push" : {"items": item}}):
                 return jsonify({"meassage": "item added successfully"})
             
         return jsonify( { "error": " failed to add item" } ), 400
     
-    def fetch_items(self):
+    def fetch_items(self, business_id):
 
         items_list = []
-        business_id = session["business_id"]
 
-        business = db.businesses.find_one({"business_id": business_id})
+        business = db.businesses.find_one({"_id": business_id})
 
         # Retrieve the items_list from the business document
         if business:
@@ -43,19 +40,26 @@ class Item:
         else:
             return jsonify({"success": False, "error": "Could not fetch items"})
         
-    def delete_item(self, item_id):
+    def delete_item(self, business_id, item_id):
 
-        business_id = session.get("business_id")
-        if db.businesses.count_documents({"business_id": business_id, "items.item_id": item_id}):
-
-            if db.businesses.delete_one({"business_id": business_id, "items.item_id": item_id}):
-                return jsonify({"success": "Item has been deleted"})
+        if db.businesses.count_documents({"_id": business_id, "items.item_id": item_id}):
+            result = db.businesses.update_one(
+                {"_id": business_id},
+                {"$pull": {"items": {"item_id": item_id}}}
+            )
+            
+            if result.modified_count == 1:
+                return jsonify({"success": "Item has been removed"})
             
             else:
-                return jsonify({"error": "Could not delete item"})
+                return jsonify({"error": "Could not remove item"})
+        
+        else:
+            return jsonify({"error": "Item not found"})
             
 
     def get_item_id(self, business_id):
         business = db.businesses.find_one({"_id": business_id})
-        ITEM_NO = len(business["items"]) + 1
-        return ("EMP0" + str(ITEM_NO))
+        ITEM_NO = business["item_no"] + 1
+        db.businesses.update_one({"_id": business_id}, {"$set": {"item_no": ITEM_NO}})
+        return ("ITEM0" + str(ITEM_NO))

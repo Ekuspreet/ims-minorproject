@@ -1,36 +1,38 @@
 from flask import session, jsonify
 from app import app
-from business.models import User
+from business.models import Business
 
 @app.route('/user/signup', methods=["POST"])
 def signup():
-    return User().signup()
+    return Business().signup()
+
 
 @app.route('/user/<business_id>/signout')
 def signout(business_id):
-    if business_id == session.get("business_id"):
-        return User().signout()
+    return Business().signout()
     
-    else:
-        return jsonify({"error": "business id did not match"})
 
 @app.route('/user/login', methods=["POST"])
 def login():
-    return User().login()
+    return Business().login()
 
-@app.route('/user/create', methods=["POST"])
-def create():
-    return User().create_employee()
-    
-@app.route("/user/<business_id>/change-password", methods=["POST"])
-def change_password(business_id):
-    if business_id == session.get("business_id"):
-        return User().change_password()
-    
-    else:
-        return jsonify({"error": "business id did not match"})
 
-# @app.route('/user/delete', methods=["POST"])
-# def delete():
-#     return User().delete_user()
+@app.route('/user/<business_id>/add_employee', methods=["POST"])
+def create(business_id):
+    return Business().add_employee(business_id)
+
+
+@app.route("/business/<business_id>/fetch_employees")
+def fetch_employees(business_id):
+    return Business().fetch_employees(business_id)
+    
+
+@app.route("/user/<business_id>/<employee_id>/change-password", methods=["POST"])
+def change_password(business_id, employee_id):
+    return Business().change_password(business_id, employee_id)
+    
+
+@app.route('/user/<business_id>/<employee_id>/remove', methods=["POST"])
+def delete(business_id, employee_id):
+    return Business().remove_employee(business_id, employee_id)
 

@@ -26,6 +26,7 @@ db = client.IMS_database
 from business import routes
 from item import routes
 
+
 @app.route("/autoauthenticate")
 def autoauthenticate():
     if "logged_in" in session:
