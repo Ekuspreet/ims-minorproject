@@ -1,4 +1,3 @@
-from flask import session, jsonify
 from app import app
 from item.models import Item
 

@@ -1,4 +1,4 @@
-from flask import jsonify, request, session
+from flask import jsonify, request
 from app import db
 
 class Item:

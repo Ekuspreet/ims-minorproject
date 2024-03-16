@@ -15,3 +15,5 @@ curl -X POST -H "Content-Type: application/json" -d "{\"item_name\":\"Product A\
 curl -X POST -H "Content-Type: application/json" http://127.0.0.1:5000/item/BIZ01/fetch
 
 curl -X POST -H "Content-Type: application/json" http://127.0.0.1:5000/item/BIZ01/ITEM02/delete
+
+curl -X POST -H "Content-Type: application/json" -d "{\"product_name\":\"Product A\", \"batch_size\": 800, \"items\": {\"item1\": 20, \"item2\": 50, \"item3\": 90}}" http://127.0.0.1:5000/product/BIZ01/add
