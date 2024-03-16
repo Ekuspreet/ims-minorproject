@@ -5,19 +5,21 @@ from app import db
 
 class Business:
 
-    def start_session(self, user, business_id):
-        
-        del user["password"]
-        session['logged_in'] = True
-        
-        session['user'] = user
-        session["business_id"] = business_id
+    def start_session(self, user, business_id, login):
         
         additional_claims = {
-            "name": user["name"],
-            "role": user["role"],
             "business_id": business_id
         }
+
+        if login:
+            additional_claims["name"] = user["name"]
+            additional_claims["role"] = user["role"]
+            additional_claims["isLoggedIn"] = True
+            del user["password"]
+            session['logged_in'] = True
+            
+            session['user'] = user
+            session["business_id"] = business_id
         
         jwt_token = create_access_token(identity=user["name"], additional_claims = additional_claims)
         
@@ -46,11 +48,11 @@ class Business:
                 "business_name" : business_name,
                 "emp_no": 1,
                 "item_no": 0,
-                "recipe_no": 0,
+                "product_no": 0,
                 "job_no": 0,
                 "employees": [],
                 "items": [],
-                "recipes": [],
+                "products": [],
                 "jobs": []
             }
             
@@ -68,7 +70,7 @@ class Business:
             db.businesses.insert_one(business)
             
             if db.businesses.update_one({'_id': BIZ_ID}, {'$push': {'employees': employee}}):
-                return self.start_session(employee, BIZ_ID)
+                return self.start_session(employee, BIZ_ID, False)
             
         return jsonify( { "error": "Signup failed" } ), 400
     
@@ -93,7 +95,7 @@ class Business:
         employee = next((emp for emp in business.get('employees', []) if emp['email'] == email), None)
         
         if employee and pbkdf2_sha256.verify(password, employee['password']) and (employee["role"] == role):
-            return self.start_session(employee, business_id)
+            return self.start_session(employee, business_id, True)
         
         return jsonify({
             "error": "Credentials not found"
