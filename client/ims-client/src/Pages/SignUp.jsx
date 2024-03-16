@@ -27,8 +27,11 @@ const SignUp = () => {
     
             console.log("Response:", response.data.jwt_token);
             const user = jwtDecode(response.data.jwt_token);
-            const name = user.name;
-            navigate('/profile', {state : { username : name } })
+            
+            setTimeout(()=> {
+                navigate('/')
+
+            }, 1000)
 
             console.log(user)
         } catch (error) {
