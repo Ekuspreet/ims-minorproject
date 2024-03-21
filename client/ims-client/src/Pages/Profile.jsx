@@ -1,6 +1,6 @@
 import { React, useState,useContext,useEffect } from 'react'
 
-import { useNavigate } from 'react-router-dom';
+import { json, useNavigate } from 'react-router-dom';
 
 import NavbarProfile from '../Components/Navbar/NavbarProfile'
 import Alertbox from '../Components/Alerts/Alertbox';
@@ -31,7 +31,8 @@ const Profile = () => {
 
   // console.log(location)
   async function logout(bid){
-    await axios.post(`/api/user/${bid}/signout`);
+    const signoutdata = JSON({"bid": bid})
+    await axios.post(`/api/user/signout`,signoutdata);
     navigate('/')
   }
   return (
