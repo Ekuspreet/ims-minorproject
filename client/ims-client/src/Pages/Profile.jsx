@@ -24,15 +24,14 @@ const Profile = () => {
   const navigate = useNavigate()
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const [tab, setTab] = useState('Activejobs')
-  // const location = useLocation()
   console.log("In Profile", user)
   
   const toggle = () => { setDrawerOpen(!isDrawerOpen) }
 
 
   // console.log(location)
-  async function logout(){
-    // await axios.post(`/api/user/${bid}/signout`);
+  async function logout(bid){
+    await axios.post(`/api/user/${bid}/signout`);
     navigate('/')
   }
   return (
