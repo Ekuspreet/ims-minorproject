@@ -31,8 +31,9 @@ const Profile = () => {
 
   // console.log(location)
   async function logout(bid){
-    const signoutdata = JSON({"business_id": bid})
-    await axios.post(`/api/user/signout`,signoutdata);
+    const signoutdata = {"business_id": bid}
+    const response = await axios.post(`/api/user/signout`,signoutdata);
+    console.log(response.data)
     navigate('/')
   }
   return (
