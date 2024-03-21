@@ -7,7 +7,7 @@ def signup():
     return Business().signup()
 
 
-@app.route('/user/<business_id>/signout')
+@app.route('/user/<business_id>/signout', methods=["POST"])
 def signout(business_id):
     return Business().signout()
     
