@@ -1,6 +1,6 @@
 import { React, useState,useContext,useEffect } from 'react'
 
-import { useNavigate } from 'react-router-dom';
+import { json, useNavigate } from 'react-router-dom';
 
 import NavbarProfile from '../Components/Navbar/NavbarProfile'
 import Alertbox from '../Components/Alerts/Alertbox';
@@ -24,15 +24,15 @@ const Profile = () => {
   const navigate = useNavigate()
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const [tab, setTab] = useState('Activejobs')
-  // const location = useLocation()
   console.log("In Profile", user)
   
   const toggle = () => { setDrawerOpen(!isDrawerOpen) }
 
 
   // console.log(location)
-  async function logout(){
-    // await axios.post(`/api/user/${bid}/signout`);
+  async function logout(bid){
+    const signoutdata = JSON({"business_id": bid})
+    await axios.post(`/api/user/signout`,signoutdata);
     navigate('/')
   }
   return (

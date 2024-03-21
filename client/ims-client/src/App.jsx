@@ -16,7 +16,7 @@ const App = () => {
   return (
     <UserContext.Provider value={[ user, setUser ]}>
       <Routes>
-        <Route path='/Profile' element={<Profile />} />
+        <Route path='/Profile' element={<Profile />} hidden = {user.loggedIn} />
         <Route path="/" element={<Landing />} />
         <Route path="/Signup" element={<SignUp />} />
         <Route path="*" element={<Error404 />} />
