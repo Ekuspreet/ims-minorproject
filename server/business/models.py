@@ -77,8 +77,12 @@ class Business:
     
     
     def signout(self):
-        session.clear()
-        return jsonify({"success": True})
+        if request.json("business_id") == session.get("business_id"):    
+            session.clear()
+            return jsonify({"success": True})
+        
+        else:
+            return jsonify({"Error": "Business id did not match"})
     
     
     def login(self):
