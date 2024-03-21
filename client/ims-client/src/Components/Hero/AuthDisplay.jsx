@@ -2,7 +2,11 @@ import React, {useState, useEffect} from 'react'
 import axios from 'axios'
 import { jwtDecode } from 'jwt-decode'
 import { useNavigate } from 'react-router-dom'
+import { useContext } from 'react'
+import { UserContext } from '../../App'
+
 const AuthDisplay = () => {
+    const [user, setUser] = useContext(UserContext)
     const navigate = useNavigate()
     const [managerLoginData,setManagerLoginData] = useState({
     })
@@ -40,10 +44,17 @@ const AuthDisplay = () => {
             const response = await axios.post("/api/user/login", finalLoginData);
     
             console.log("Response:", response.data.jwt_token);
-            const user = jwtDecode(response.data.jwt_token);
-            const {name,business_id} = user;
+            const user_response = jwtDecode(response.data.jwt_token);
+            const {name,business_id} = user_response;
+            setUser(
+                {
+                    'name' : name,
+                    'bid' : business_id
+                }
+            )
+            
             setTimeout(()=> 
-            {navigate('/profile', {state : { username : name, bid : business_id } })
+            {navigate('/profile')
         },1000
             )
 

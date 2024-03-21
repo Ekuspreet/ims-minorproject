@@ -45,10 +45,16 @@ const NavbarProfile = ({ toggler, user, logout , bid}) => {
                             <h3 className="font-bold text-lg">Hello! {user} </h3>
                             <p className="py-4">Your Business Id is : {bid}</p>
                             <div className="modal-action">
-                                <form method="dialog">
+                                
                                     {/* if there is a button in form, it will close the modal */}
-                                    <button className="btn btn-error" onClick={logout}>Log Out</button>
-                                </form>
+                                    <button className="btn" onClick={() => {
+            const modal = document.getElementById('my_modal_1');
+            if (modal) {
+              modal.close();
+            }
+          }}>Close</button>
+                                    <button className="btn btn-error" onClick={()=>logout(bid)}>Log Out</button>
+                                
                             </div>
                         </div>
                     </dialog>

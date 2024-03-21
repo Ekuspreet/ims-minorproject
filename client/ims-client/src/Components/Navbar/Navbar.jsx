@@ -38,7 +38,7 @@ menu
       </ul>
   </div>
   <div className="navbar-end">
- <Link to = "/signup"  >   <a className="btn md:btn-md btn-sm btn-primary btn-outline">Sign Up</a> </Link>
+ <Link to = "/signup"  >   <span className="btn md:btn-md btn-sm btn-primary btn-outline">Sign Up</span> </Link>
   </div>
 </div>
     </>
