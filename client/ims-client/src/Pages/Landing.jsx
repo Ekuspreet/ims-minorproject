@@ -24,8 +24,8 @@ const Landing = () => {
 
   return (
     
- user.loggedIn ? (    <Navigate to= "/Profile" />
-) :  
+//  user.loggedIn ? (    <Navigate to= "/Profile" />
+// ) :  
 <>
     <Navbar/>
 
