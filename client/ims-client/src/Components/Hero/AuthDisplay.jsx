@@ -2,16 +2,16 @@ import React, {useState, useEffect} from 'react'
 import axios from 'axios'
 import { jwtDecode } from 'jwt-decode'
 import { useNavigate } from 'react-router-dom'
-import { useContext } from 'react'
-import { UserContext } from '../../App'
-
+import Cookies from 'js-cookie'
 const AuthDisplay = () => {
-    const [user, setUser] = useContext(UserContext)
+   
     const navigate = useNavigate()
+
     const [managerLoginData,setManagerLoginData] = useState({
     })
     const [employerLoginData,setEmployerLoginData] = useState({
     })
+
     function inputData(event,role){
         if(role == "employer"){
             setEmployerLoginData({
@@ -29,36 +29,33 @@ const AuthDisplay = () => {
         console.log(role, "  data changed")
     
         }
-        
+
         async function LogIn(event,loginData,role){
         
             event.preventDefault();
+
             const finalLoginData = {
                 ...loginData,
                 'role' : role
             };
     
         try {
+
             console.log("Submission", finalLoginData);
     
             const response = await axios.post("/api/user/login", finalLoginData);
-    
-            console.log("Response:", response.data.jwt_token);
-            const user_response = jwtDecode(response.data.jwt_token);
-            const {name,business_id} = user_response;
-            setUser(
-                {
-                    'name' : name,
-                    'bid' : business_id
-                }
-            )
-            
-            setTimeout(()=> 
-            {navigate('/profile')
-        },1000
-            )
+            console.log(response)
+            console.log( Cookies.get("session"))
+           
+            // console.log("Response : ",response)
+            // console.log("Response (finding cookie): ",response)
+           
+            // if(Cookies.get("session")){
+            // setTimeout(()=>{
+            //     navigate("/profile")
 
-            console.log(user)
+            // },200)}
+            
         } catch (error) {
        
             console.error("Error:", error);

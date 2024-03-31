@@ -1,6 +1,6 @@
-import { React, useState,useContext,useEffect } from 'react'
+import { React, useState,useEffect } from 'react'
 
-import { json, useNavigate } from 'react-router-dom';
+import {useNavigate } from 'react-router-dom';
 
 import NavbarProfile from '../Components/Navbar/NavbarProfile'
 import Alertbox from '../Components/Alerts/Alertbox';
@@ -11,29 +11,37 @@ import InventoryItems from '../Components/Profile/InventoryItems';
 import Recipes from '../Components/Profile/Recipes';
 import Drawer from '../Components/Profile/Drawer';
 import axios from 'axios';
-import { UserContext } from '../App';
 
-
-
+import Cookies from 'js-cookie';
 
 
 const Profile = () => {
-
-  const [user, setUser] = useContext(UserContext)
-
   const navigate = useNavigate()
+
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const [tab, setTab] = useState('Activejobs')
-  console.log("In Profile", user)
+
+
+  console.log("In Profile")
   
   const toggle = () => { setDrawerOpen(!isDrawerOpen) }
 
+  
+  useEffect(()=>{
 
-  // console.log(location)
-  async function logout(bid){
-    const signoutdata = {"bizid": bid}
-    const response = await axios.post(`/api/user/signout`,signoutdata);
-    console.log(response.data)
+  function getUserInfo(){
+    if(!Cookies.get("session")){
+      navigate("/")
+    }
+  }
+  
+  getUserInfo();
+  
+  },[]
+  )
+
+  async function logout(){
+    await axios.post(`/api/user/signout`);
     navigate('/')
   }
   return (
@@ -42,7 +50,7 @@ const Profile = () => {
     <>
       <Drawer toggle = {toggle} setTab = {setTab} isDrawerOpen={isDrawerOpen} >
 
-        <NavbarProfile toggler={toggle} user = {user.name} bid = {user.bid} logout = {logout} />
+        <NavbarProfile toggler={toggle} logout = {logout} />
 
         <div className="main-content flex flex-col md:flex-row justify-between p-10 gap-8 ">
 

@@ -7,7 +7,7 @@ const [alerts, setAlerts] = useState([
 
   return (
     <>
-    <div className=' bg-error h-[30em] md:w-[25em] rounded-lg px-3 overflow-y-scroll'>
+    <div className=' bg-error h-[35em] md:w-[25em] rounded-lg px-3 overflow-y-scroll'>
 
         <div className=" text-center font-bold text-2xl py-2 text-slate-800 sticky top-0 bg-error"> AlertBox </div>
         { alerts.length != 0 ? (<div className="">
