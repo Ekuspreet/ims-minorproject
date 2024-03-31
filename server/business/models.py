@@ -17,7 +17,7 @@ class Business:
             session['logged_in'] = True
             session['user'] = user
             jwt_token = create_access_token(identity=user["name"], additional_claims = additional_claims)
-        
+            return Response.set_cookie(key="session", value=jwt_token)
         
         return business_id, 200
     
