@@ -1,4 +1,4 @@
-from flask import jsonify, request, session, Response
+from flask import jsonify, request, session, make_response
 from flask_jwt_extended import create_access_token
 from passlib.hash import pbkdf2_sha256
 from app import db
@@ -17,8 +17,7 @@ class Business:
             session['logged_in'] = True
             session['user'] = user
             jwt_token = create_access_token(identity=user["name"], additional_claims = additional_claims)
-            response = Response()
-            return response.set_cookie(key="session", value=jwt_token)
+            return jsonify({"Response": "Baba ji ka thullu"}), 200
         
         return business_id, 200
     
