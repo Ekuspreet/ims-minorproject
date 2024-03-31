@@ -8,11 +8,10 @@ class Business:
     def start_session(self, user, business_id, login):
         
         additional_claims = {
-            "business_id": business_id
+            "name" : user["name"]
         }
 
         if login:
-            additional_claims["name"] = user["name"]
             additional_claims["role"] = user["role"]
             additional_claims["isLoggedIn"] = True
             del user["password"]
