@@ -19,7 +19,7 @@ class Business:
             jwt_token = create_access_token(identity=user["name"], additional_claims = additional_claims)
         
         
-        return jsonify({"business_id" : business_id}), 200
+        return business_id, 200
     
     def signup(self):
         
