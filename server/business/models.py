@@ -1,4 +1,4 @@
-from flask import jsonify, request, session
+from flask import jsonify, request, session, Response
 from flask_jwt_extended import create_access_token
 from passlib.hash import pbkdf2_sha256
 from app import db
@@ -20,10 +20,10 @@ class Business:
             
             session['user'] = user
             session["business_id"] = business_id
+            jwt_token = create_access_token(identity=user["name"], additional_claims = additional_claims)
+            return jsonify(jwt_token=jwt_token), 200
         
-        jwt_token = create_access_token(identity=user["name"], additional_claims = additional_claims)
-        
-        return jsonify(jwt_token=jwt_token), 200
+        return Response.set_cookie("biz_id", business_id), 200
     
     def signup(self):
         
