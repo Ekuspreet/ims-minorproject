@@ -22,7 +22,7 @@ class Business:
         return business_id, 200
     
     def user_info(self):
-        if session["logged_in"]:
+        if "logged_in" in session:
             return jsonify({"user_info": session})
         else:
             return jsonify({"session": False})
