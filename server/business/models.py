@@ -21,6 +21,10 @@ class Business:
         
         return business_id, 200
     
+    def user_info(self):
+        if session["logged_in"]:
+            return jsonify({"user_info": session})
+    
     def signup(self):
         
         BIZ_ID = self.get_business_id()

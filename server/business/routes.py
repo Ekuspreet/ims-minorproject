@@ -11,6 +11,9 @@ def signup():
 def signout():
     return Business().signout()
     
+@app.route("/user_info")
+def user_info():
+    return Business().user_info()
 
 @app.route('/user/login', methods=["POST"])
 def login():
