@@ -8,21 +8,19 @@ class Business:
     def start_session(self, user, business_id, login):
         
         additional_claims = {
-            "name" : user["name"]
+            "user_id": user["employee_id"]
         }
 
         if login:
-            additional_claims["role"] = user["role"]
             additional_claims["isLoggedIn"] = True
             del user["password"]
             session['logged_in'] = True
-            
             session['user'] = user
-            session["business_id"] = business_id
             jwt_token = create_access_token(identity=user["name"], additional_claims = additional_claims)
-            return jsonify(jwt_token=jwt_token), 200
+            return Response.set_cookie('cookie', jwt_token)
         
-        return Response.set_cookie("biz_id", business_id), 200
+        
+        return jsonify({"business_id" : business_id}), 200
     
     def signup(self):
         
