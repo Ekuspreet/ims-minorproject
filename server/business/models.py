@@ -24,6 +24,8 @@ class Business:
     def user_info(self):
         if session["logged_in"]:
             return jsonify({"user_info": session})
+        else:
+            return jsonify({"session": False})
     
     def signup(self):
         
