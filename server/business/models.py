@@ -25,7 +25,7 @@ class Business:
         if "logged_in" in session:
             return jsonify({"user_info": session})
         else:
-            return jsonify({"logged_in": False})
+            return jsonify({"response": {"data": {"user_info": False}}})
     
     def signup(self):
         
