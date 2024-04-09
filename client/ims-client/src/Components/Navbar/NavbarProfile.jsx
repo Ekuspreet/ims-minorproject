@@ -3,7 +3,7 @@ import Bicon from '../../assets/icon.png'
 import { Link } from 'react-router-dom'
 import { useState } from 'react';
 
-const NavbarProfile = ({ toggler, user, logout , bid}) => {
+const NavbarProfile = ({ toggler, user, logout, bid }) => {
 
     return (
         <>
@@ -27,14 +27,23 @@ const NavbarProfile = ({ toggler, user, logout , bid}) => {
                 <div className="navbar-center hidden md:flex">
 
                     <ul className="menu menu-horizontal px-1">
-                        <li className='text-2xl '>Welcome Back {user} </li>
+                        {user ? (
+                            <li className='text-2xl '>Welcome Back  {user} </li>
+                        ) : (
+                            <span className="loading loading-spinner loading-md"></span>
+
+                        )
+                        }
                     </ul>
                 </div>
 
                 <div className="navbar-end">
                     <button className="avatar" onClick={() => document.getElementById('my_modal_1').showModal()}>
-                        <div className="  w-12  md:w-16 hover:cursor-pointer hover:rounded-xl rounded-full">
-                            <img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+                        <div className="  w-12  md:w-14 hover:cursor-pointer hover:rounded-xl rounded-full">
+                            {user ? (
+                                <img src={`https://ui-avatars.com/api/?name=${user?.replace(" ", "+")}&bold=true`} />
+                            ) : null}
+
                         </div>
 
 
@@ -45,16 +54,16 @@ const NavbarProfile = ({ toggler, user, logout , bid}) => {
                             <h3 className="font-bold text-lg">Hello! {user} </h3>
                             <p className="py-4">Your Business Id is : {bid}</p>
                             <div className="modal-action">
-                                
-                                    {/* if there is a button in form, it will close the modal */}
-                                    <button className="btn" onClick={() => {
-            const modal = document.getElementById('my_modal_1');
-            if (modal) {
-              modal.close();
-            }
-          }}>Close</button>
-                                    <button className="btn btn-error" onClick={()=>logout(bid)}>Log Out</button>
-                                
+
+                                {/* if there is a button in form, it will close the modal */}
+                                <button className="btn" onClick={() => {
+                                    const modal = document.getElementById('my_modal_1');
+                                    if (modal) {
+                                        modal.close();
+                                    }
+                                }}>Close</button>
+                                <button className="btn btn-error" onClick={() => logout(bid)}>Log Out</button>
+
                             </div>
                         </div>
                     </dialog>

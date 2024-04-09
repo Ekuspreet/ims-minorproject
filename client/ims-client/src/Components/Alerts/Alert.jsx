@@ -12,9 +12,9 @@ const Alert = ({ message }) => {
                 <span></span>
                 <span>{message}</span>
                 <div>
-                    <button className="btn btn-sm"
+                    <button className="btn btn-sm text-lg text-error"
                         onClick={()=>setVisible("hidden")}
-                    >❌</button>
+                    >&#x292B;</button>
 
                 </div>
             </div>

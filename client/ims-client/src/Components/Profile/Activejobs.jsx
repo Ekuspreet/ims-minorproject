@@ -42,11 +42,11 @@ const Activejobs = () => {
   return (
     <>
 
-      <div className="flex flex-wrap mt-3 gap-4  w-full  justify-evenly mx-auto">
+      <div className="flex flex-wrap mt-3 gap-4 h-[28.5em] overflow-auto  w-full justify-between px-6  mx-auto">
 
         {
           active.map((job)=>(
-<div className="card w-64 bg-slate-200 text-base-300 font-semibold shadow-xl">
+<div className="card w-64 bg-base-200  font-semibold shadow-xl">
             <div className="card-body">
               <h2 className="card-title font-bold">{job.title}</h2>
               <p>Batch :  {job.batchsize} </p>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import NavbarSignup from '../Components/Navbar/NavbarSignup'
-import { useNavigate } from 'react-router-dom';
+import { resolvePath, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import {jwtDecode} from 'jwt-decode'
 const SignUp = () => {
@@ -25,20 +25,14 @@ const SignUp = () => {
     
             const response = await axios.post("/api/user/signup", signUpData);
     
-            console.log("Response:", response.data.jwt_token);
-            const user = jwtDecode(response.data.jwt_token);
-            
-            setTimeout(()=> {
+           console.log(response.data)
+           alert(response.data);
+           setTimeout(()=> {
                 navigate('/')
-
             }, 1000)
-
-            console.log(user)
         } catch (error) {
-       
-            console.error("Error:", error);
-    
-            
+   
+            console.error("Error:", error); 
         }
     }
     
