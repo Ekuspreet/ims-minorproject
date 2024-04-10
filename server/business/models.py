@@ -90,7 +90,6 @@ class Business:
         business_id = request.json["business_id"]
         email = request.json["email"]
         password = request.json["password"]
-        role = request.json["role"]
         
         business = db.businesses.find_one({"_id" : business_id})
         if not business:
@@ -98,7 +97,7 @@ class Business:
         
         employee = next((emp for emp in business.get('employees', []) if emp['email'] == email), None)
         
-        if employee and pbkdf2_sha256.verify(password, employee['password']) and (employee["role"] == role):
+        if employee and pbkdf2_sha256.verify(password, employee['password']):
             return self.start_session(employee, business_id, True)
         
         return jsonify({
