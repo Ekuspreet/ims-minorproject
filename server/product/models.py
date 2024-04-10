@@ -1,9 +1,30 @@
 from flask import request, jsonify, session
 from app import db
-import os
 
 class Product():
     
+    def fetch_products(self):
+        business_id = session.get("business_id")
+        business = db.businesses.find_one({"_id": business_id})
+        if business:
+            product_list = business["products"]
+            for product in product_list:
+                del product["items"]
+            return jsonify({"success": True,"product_list": product_list})
+        else:
+            return jsonify({"success": False, "error": "Could not fetch products"})
+        
+    def fetch_products_items(self):
+        business_id = session.get("business_id")
+        business = db.businesses.find_one({"_id": business_id})
+        if business:
+            product_list = business["products"]
+            for product in product_list:
+                del product["items"]
+            return jsonify({"success": True,"product_list": product_list})
+        else:
+            return jsonify({"success": False, "error": "Could not fetch products"})
+
     def add_product(self):
         
         business_id = session.get("business_id")
@@ -34,7 +55,7 @@ class Product():
         quantity = float(request.json.get("quantity", 0))
         
         if not (product_id and item_id):
-            return jsonify({"success": False, "error": "Product ID or Item ID missing in request."}), 400
+            return jsonify({"success": False, "error": "Product ID or Product ID missing in request."}), 400
         
         item = {
             "item_id": item_id,
@@ -51,6 +72,40 @@ class Product():
         else:
             return jsonify({"success": False, "error": "Failed to add item to product."}), 500
 
+    def remove_product(self):
+        product_id = request.json["product_id"]
+        business_id = session.get("business_id")
+
+        if db.businesses.count_documents({"_id": business_id, "products.product_id": product_id}):
+            result = db.businesses.update_one(
+                {"_id": business_id},
+                {"$pull": {"products": {"product_id": product_id}}}
+            )
+            
+            if result.modified_count == 1:
+                return jsonify({"success": "Product has been removed"})
+            
+            else:
+                return jsonify({"error": "Could not remove Product"})
+        
+        else:
+            return jsonify({"error": "Product not found"})
+
+    def remove_item(self):
+        product_id = request.json["product_id"]
+        item_id = request.json["item_id"]
+        business_id = session.get("business_id")
+        business = db.businesses.find_one({"_id": business_id})
+        for item in business["items"]:
+            if item["item_id"] == item_id:
+                result = db.businesses.update_one(
+                    {"_id": business_id, "products.product_id": product_id},
+                    {"$pull": {"products.$.item_id": item_id}}
+                )
+                if result.modified_count == 1:
+                    return jsonify({"success": True, "message": "item deleted."})
+                else:
+                    return jsonify({"success": False, "message": "Failed to remove item."}), 500
 
     def get_product_id(self, business_id):
         business = db.businesses.find_one({"_id": business_id})
