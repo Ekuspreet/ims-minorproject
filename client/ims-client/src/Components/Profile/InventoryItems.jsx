@@ -7,15 +7,12 @@ const rawMaterial = [
 const InventoryItems = () => {
   const [materials, setMaterials] = useState({});
   const [fetch, triggerFetch] = useState(true)
-  function initMaterial(response){
-    setMaterials(response.data.items_list)
-  }
-  
+
   useEffect(()=>{
     async function fetchItems(){
     const response = await axios.get('/api/item/fetch')
     console.log(response)
-    initMaterial(response)
+    setMaterials(response.data.items_list)
     }
     if(fetch){
     fetchItems(); //calling 
@@ -109,7 +106,7 @@ const InventoryItems = () => {
             <input
             required
               className="input input-bordered m-2"
-              type="text"
+              type="number"
               placeholder="Available (in Kg)"
               value={newMaterial.current_stock}
               onChange={(e) => setNewMaterial({ ...newMaterial, current_stock: e.target.value })}
@@ -117,7 +114,7 @@ const InventoryItems = () => {
             <input
             required
               className="input input-bordered m-2"
-              type="text"
+              type="number"
               placeholder="Threshold (in Kg)"
               value={newMaterial.threshold_stock}
               onChange={(e) => setNewMaterial({ ...newMaterial, threshold_stock: e.target.value })}

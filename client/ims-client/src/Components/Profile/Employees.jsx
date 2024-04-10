@@ -1,25 +1,20 @@
-import React, { useState } from 'react';
-
+import React, { useState, useEffect } from 'react';
+import  axios  from 'axios';
 const EmployeeDetails = () => {
-  const [employees, setEmployees] = useState([
-    {
-      id: "1",
-      name: 'John Doe',
-      email: 'john@example.com',
-      role: 'Manager',
-      password: '********',
-      isEditing: false,
-    },
-    {
-      id: "2",
-      name: 'Jane Smith',
-      email: 'jane@example.com',
-      role: 'Assistant Manager',
-      password: '********',
-      isEditing: false,
-    },
-    // Add more employees as needed
-  ]);
+  const [employees, setEmployees] = useState([]);
+  const [fetch, triggerFetch] = useState(true);
+  
+  useEffect(()=>{
+    async function fetchEmployees(){
+    const response = await axios.get('/api/business/fetch_employees')
+    console.log(response)
+    setEmployees(response.data.employee_list)
+    }
+    if(fetch){
+    fetchEmployees();
+      triggerFetch(false)
+  }
+  },[employees])
 
   const [newEmployee, setNewEmployee] = useState({
     id: "",
@@ -39,7 +34,11 @@ const EmployeeDetails = () => {
   const handleDelete = (index) => {
     const updatedEmployees = [...employees];
     updatedEmployees.splice(index, 1);
+    const response = axios.post('/api/user/remove', {employee_id : employees[index].employee_id })
+    if(response.status == '200'){
+    triggerFetch(true)
     setEmployees(updatedEmployees);
+    }
   };
 
   const handleInputChange = (e, index, field) => {
@@ -54,8 +53,12 @@ const EmployeeDetails = () => {
     setEmployees(updatedEmployees);
   };
 
-  const handleAddEmployee = () => {
-    setEmployees([...employees, newEmployee]);
+  const handleAddEmployee = async () => {
+    const response = await axios.post('/api/user/add_employee', newEmployee)
+    if(response.status == '200'){
+      triggerFetch(true)
+      setEmployees([...employees, newEmployee]);
+    }
     setNewEmployee({
       id: "",
       name: "",
@@ -75,7 +78,7 @@ const EmployeeDetails = () => {
             <th className='bg-base-200 rounded-2xl'>Name</th>
             <th className='bg-base-200 rounded-2xl'>Email</th>
             <th className='bg-base-200 rounded-2xl'>Role</th>
-            <th className='bg-base-200 rounded-2xl'>Password</th>
+            
             <th className='bg-base-200 rounded-2xl'>Actions</th>
           </tr>
         </thead>
@@ -83,7 +86,7 @@ const EmployeeDetails = () => {
         <tbody>
           {employees.map((employee, index) => (
             <tr key={index}>
-              <td>{employee.id}</td>
+              <td>{employee.employee_id}</td>
               <td>
                 {employee.isEditing ? (
                   <input
@@ -118,18 +121,6 @@ const EmployeeDetails = () => {
                   />
                 ) : (
                   employee.role
-                )}
-              </td>
-              <td>
-                {employee.isEditing ? (
-                  <input
-                    className="input input-bordered"
-                    type="password"
-                    value={employee.password}
-                    onChange={(e) => handleInputChange(e, index, 'password')}
-                  />
-                ) : (
-                  employee.password
                 )}
               </td>
               <td>

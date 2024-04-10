@@ -45,7 +45,7 @@ const AuthDisplay = () => {
             console.log("Submission", finalLoginData);
 
             const response = await axios.post("/api/user/login", finalLoginData);
-            
+            console.log(response)
             navigate("/profile")
         } catch (error) {
 
@@ -100,7 +100,7 @@ const AuthDisplay = () => {
                         <h2 className="card-title text-lg mx-auto md:text-3xl "> I am an <span className='text-primary font-bold' > EMPLOYEE</span> </h2>
                         {/* <div className="divider"> Login </div> */}
 
-                        <form onSubmit={(event) => LogIn(event, managerLoginData, "employee")} className='md:w-10/12 w-full flexflex-col justify-center items-center'>
+                        <form onSubmit={(event) => LogIn(event, employerLoginData, "employee")} className='md:w-10/12 w-full flexflex-col justify-center items-center'>
 
                             <div className="label">
                                 <span className="label-text">Business ID</span>
