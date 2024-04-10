@@ -10,10 +10,10 @@ curl -X POST http://127.0.0.1:5000/user/BIZ01/EMP02/remove
 
 curl -X POST -H "Content-Type: application/json" -d "{\"old_password\":\"secretpassword\", \"new_password\":\"new_password\"}" http://127.0.0.1:5000/user/BIZ01/EMP02/change-password
 
-curl -X POST -H "Content-Type: application/json" -d "{\"item_name\":\"Product A\", \"quantity\": 10}" http://127.0.0.1:5000/item/BIZ01/add
+curl -X POST -H "Content-Type: application/json" -d "{\"item_name\":\"Product A\", \"current_stock\": 100, \"threshold_stock\": 10}" http://127.0.0.1:5000/item/add
 
-curl -X POST -H "Content-Type: application/json" http://127.0.0.1:5000/item/BIZ01/fetch
+curl -X GET -H "Content-Type: application/json" http://127.0.0.1:5000/item/fetch
 
-curl -X POST -H "Content-Type: application/json" http://127.0.0.1:5000/item/BIZ01/ITEM02/delete
+curl -X POST -H "Content-Type: application/json" http://127.0.0.1:5000/item/ITEM02/delete
 
 curl -X POST -H "Content-Type: application/json" -d "{\"product_name\":\"Product A\", \"batch_size\": 800, \"items\": {\"item1\": 20, \"item2\": 50, \"item3\": 90}}" http://127.0.0.1:5000/product/BIZ01/add

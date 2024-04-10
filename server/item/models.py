@@ -6,7 +6,8 @@ class Item:
     def add_item(self):
         business_id = session.get("business_id")
         item_name = request.json["item_name"]
-        quantity = float(request.json["quantity"])
+        current_stock = float(request.json["current_stock"])
+        threshold_stock = int(request.json["threshold_stock"])
 
         item_id = self.get_item_id(business_id)
 
@@ -19,7 +20,8 @@ class Item:
             item = {
                 "item_id": item_id,
                 "name": item_name.title(),
-                "quantity": quantity
+                "current_stock": current_stock,
+                "threshold_stock": threshold_stock
             } 
             
             if db.businesses.update_one({"_id":business_id}, {"$push" : {"items": item}}):
