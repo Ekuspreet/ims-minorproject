@@ -47,7 +47,6 @@ class Employee:
         business_id = session.get("business_id")
         business = db.businesses.find_one({"_id": business_id})
 
-        # Retrieve the employee_list from the business document
         if business:
             employee_list = business.get("employees", [])
             employees_info = []
@@ -58,25 +57,34 @@ class Employee:
             return jsonify({"success": True,"employee_list": employees_info})
         else:
             return jsonify({"success": False, "error": "Could not fetch employees"})
-    
-    def change_password(self):
-        business_id = session.get("business_id")
-        old_password = request.json["old_password"]
-        new_password = request.json["new_password"]
-        employee_id = request.json["employee_id"]
-        business = db.businesses.find_one({"_id": business_id, "employees.employee_id": employee_id})
-        
-        for employee in business["employees"]:
-            if employee["employee_id"] == employee_id:
-                if pbkdf2_sha256.verify(old_password, employee["password"]):
-                    new_password = pbkdf2_sha256.encrypt(new_password)
-                    db.businesses.update_one({ "_id": business_id, "employees.employee_id": employee_id }, { "$set": { "employees.$.password": new_password}})
-                    return jsonify({"success": True, "message": "Password has been updated"})
-                
-                else:
-                    return jsonify({"success": False, "message": "Password is incorrect"})
             
-    
+    def edit_employee_info(self):
+        name = request.json.get("name")
+        email = request.json.get("email")
+        role = request.json.get("role")
+        employee_id = request.json.get("employee_id")
+        business_id = session.get("business_id")
+        if not business_id:
+            return jsonify({"success": False, "error": "Business ID not found in session."}), 400
+
+        business = db.businesses.find_one({"_id": business_id})
+
+        employee_found = False
+        for employee in business.get("employees", []):
+            if employee.get("employee_id") == employee_id:
+                employee_found = True
+                result = db.businesses.update_one(
+                    {"_id": business_id, "employees.employee_id": employee_id},
+                    {"$set": {"employees.$.name": name, "employees.$.email": email, "employees.$.role": role}}
+                )
+                if result.modified_count == 1:
+                    return jsonify({"success": True, "message": "Details updated."})
+                else:
+                    return jsonify({"success": False, "message": "Failed to update details."}), 500
+
+        if not employee_found:
+            return jsonify({"success": False, "message": "Employee not found."}), 404
+
     def remove_employee(self):
         business_id = session.get("business_id")
         employee_id = request.json["employee_id"]
