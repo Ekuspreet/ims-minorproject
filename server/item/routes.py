@@ -6,7 +6,7 @@ def add_item():
     return Item().add_item()
     
 
-@app.route("/item/fetch", methods=["POST"])
+@app.route("/item/fetch")
 def fetch_items():
     return Item().fetch_items()
     
