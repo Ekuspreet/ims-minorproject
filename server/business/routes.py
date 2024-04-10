@@ -30,12 +30,12 @@ def fetch_employees():
     return Business().fetch_employees()
     
 
-@app.route("/user/<employee_id>/change-password", methods=["POST"])
-def change_password(employee_id):
-    return Business().change_password(employee_id)
+@app.route("/user/change-password", methods=["POST"])
+def change_password():
+    return Business().change_password()
     
 
-@app.route('/user/<employee_id>/remove', methods=["POST"])
-def delete(employee_id):
-    return Business().remove_employee(employee_id)
+@app.route('/user/remove', methods=["POST"])
+def delete():
+    return Business().remove_employee()
 

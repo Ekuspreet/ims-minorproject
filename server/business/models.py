@@ -90,7 +90,6 @@ class Business:
         business_id = request.json["business_id"]
         email = request.json["email"]
         password = request.json["password"]
-        role = request.json["role"]
         
         business = db.businesses.find_one({"_id" : business_id})
         if not business:
@@ -98,7 +97,7 @@ class Business:
         
         employee = next((emp for emp in business.get('employees', []) if emp['email'] == email), None)
         
-        if employee and pbkdf2_sha256.verify(password, employee['password']) and (employee["role"] == role):
+        if employee and pbkdf2_sha256.verify(password, employee['password']):
             return self.start_session(employee, business_id, True)
         
         return jsonify({
@@ -155,11 +154,11 @@ class Business:
         else:
             return jsonify({"success": False, "error": "Could not fetch employees"})
     
-    def change_password(self, employee_id):
+    def change_password(self):
         business_id = session.get("business_id")
         old_password = request.json["old_password"]
         new_password = request.json["new_password"]
-        
+        employee_id = request.json["employee_id"]
         business = db.businesses.find_one({"_id": business_id, "employees.employee_id": employee_id})
         
         for employee in business["employees"]:
@@ -173,8 +172,9 @@ class Business:
                     return jsonify({"success": False, "message": "Password is incorrect"})
             
     
-    def remove_employee(self, employee_id):
+    def remove_employee(self):
         business_id = session.get("business_id")
+        employee_id = request.json["employee_id"]
         if db.businesses.count_documents({"_id": business_id, "employees.employee_id": employee_id}):
             result = db.businesses.update_one(
                 {"_id": business_id},
