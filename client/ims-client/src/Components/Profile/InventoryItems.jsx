@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
 const rawMaterial = [
 ];
 
 const InventoryItems = () => {
-  const [materials, setMaterials] = useState();
+  const [materials, setMaterials] = useState({});
+  
   useEffect(()=>{
     async function fetchItems(){
-    const response = await axios.get('/api/user_info')
+    const response = await axios.get('/api/items/fetch')
+    console.log(response)
     }
   
     fetchItems(); //calling 
