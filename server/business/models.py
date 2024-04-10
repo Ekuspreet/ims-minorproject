@@ -148,7 +148,7 @@ class Business:
             employee_list = business.get("employees", [])
             employees_info = []
             for emp in employee_list:
-                employee_info = {"name": emp["name"], "employee_id": emp["employee_id"], "role": emp["role"]}
+                employee_info = {"name": emp["name"], "employee_id": emp["employee_id"], "email": emp["email"],"role": emp["role"]}
                 employees_info.append(employee_info)
 
             return jsonify({"success": True,"employee_list": employees_info})
