@@ -21,6 +21,7 @@ db = client.IMS_database
 
 # Routes
 from business import routes
+from employee import routes
 from item import routes
 from product import routes
 
