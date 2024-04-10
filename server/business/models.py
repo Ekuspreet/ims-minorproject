@@ -107,12 +107,13 @@ class Business:
         }), 401
         
         
-    def add_employee(self, business_id):
+    def add_employee(self):
 
         name = request.json["name"]
         email = request.json["email"]
         role = request.json["role"]
         password = request.json["password"]
+        business_id = session.get("business_id")
 
         employee_id = self.get_employee_id(business_id)
 
@@ -138,9 +139,9 @@ class Business:
                 return jsonify({"success": False, "message": "Failed to create employee"}), 500
     
 
-    def fetch_employees(self, business_id):
+    def fetch_employees(self):
         employee_list = []
-
+        business_id = session.get("business_id")
         business = db.businesses.find_one({"_id": business_id})
 
         # Retrieve the employee_list from the business document
@@ -155,8 +156,8 @@ class Business:
         else:
             return jsonify({"success": False, "error": "Could not fetch employees"})
     
-    def change_password(self, business_id, employee_id):
-        
+    def change_password(self, employee_id):
+        business_id = session.get("business_id")
         old_password = request.json["old_password"]
         new_password = request.json["new_password"]
         
@@ -173,8 +174,8 @@ class Business:
                     return jsonify({"success": False, "message": "Password is incorrect"})
             
     
-    def remove_employee(self, business_id, employee_id):
-
+    def remove_employee(self, employee_id):
+        business_id = session.get("business_id")
         if db.businesses.count_documents({"_id": business_id, "employees.employee_id": employee_id}):
             result = db.businesses.update_one(
                 {"_id": business_id},

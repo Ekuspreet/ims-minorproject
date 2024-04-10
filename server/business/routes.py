@@ -20,22 +20,22 @@ def login():
     return Business().login()
 
 
-@app.route('/user/<business_id>/add_employee', methods=["POST"])
-def create(business_id):
-    return Business().add_employee(business_id)
+@app.route('/user/add_employee', methods=["POST"])
+def create():
+    return Business().add_employee()
 
 
-@app.route("/business/<business_id>/fetch_employees")
-def fetch_employees(business_id):
-    return Business().fetch_employees(business_id)
+@app.route("/business/fetch_employees")
+def fetch_employees():
+    return Business().fetch_employees()
     
 
-@app.route("/user/<business_id>/<employee_id>/change-password", methods=["POST"])
-def change_password(business_id, employee_id):
-    return Business().change_password(business_id, employee_id)
+@app.route("/user/<employee_id>/change-password", methods=["POST"])
+def change_password(employee_id):
+    return Business().change_password(employee_id)
     
 
-@app.route('/user/<business_id>/<employee_id>/remove', methods=["POST"])
-def delete(business_id, employee_id):
-    return Business().remove_employee(business_id, employee_id)
+@app.route('/user/<employee_id>/remove', methods=["POST"])
+def delete(employee_id):
+    return Business().remove_employee(employee_id)
 
