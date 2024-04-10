@@ -5,14 +5,14 @@ class Item:
     
     def add_item(self):
         business_id = session.get("business_id")
-        item_name = request.json["item_name"]
+        item_name = request.json["name"]
         current_stock = float(request.json["current_stock"])
         threshold_stock = int(request.json["threshold_stock"])
 
         item_id = self.get_item_id(business_id)
 
         if db.businesses.count_documents({"business_id" : business_id, "items": {"$elemMatch": {"item_id": item_id}}}):
-            return jsonify({"error": "Item already present"})
+            return jsonify({"error": "Item already present"}), 201
 
         else:
             
@@ -25,7 +25,7 @@ class Item:
             } 
             
             if db.businesses.update_one({"_id":business_id}, {"$push" : {"items": item}}):
-                return jsonify({"meassage": "item added successfully"})
+                return jsonify({"meassage": "item added successfully"}), 200
             
         return jsonify( { "error": " failed to add item" } ), 400
     
