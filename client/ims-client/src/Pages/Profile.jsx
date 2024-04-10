@@ -69,7 +69,7 @@ const Profile = () => {
     <>
       <Drawer toggle = {toggle} setTab = {setTab} isDrawerOpen={isDrawerOpen} >
 
-        <NavbarProfile user={user.name}  toggler={toggle} logout = {logout} bid={user.bid} />
+        <NavbarProfile user={"Harsimran Singh"}  toggler={toggle} logout = {logout} bid={user.bid} />
 
         <div className="main-content flex flex-col md:flex-row justify-between p-10 gap-8 ">
 

@@ -6,33 +6,51 @@ const rawMaterial = [
 
 const InventoryItems = () => {
   const [materials, setMaterials] = useState({});
+  const [fetch, triggerFetch] = useState(true)
+  function initMaterial(response){
+    setMaterials(response.data.items_list)
+  }
   
   useEffect(()=>{
     async function fetchItems(){
-    const response = await axios.get('/api/items/fetch')
+    const response = await axios.get('/api/item/fetch')
     console.log(response)
+    initMaterial(response)
     }
-  
+    if(fetch){
     fetchItems(); //calling 
-  },[])
+      triggerFetch(false)
+  }
+  },[materials])
   const [newMaterial, setNewMaterial] = useState({
-    id: "",
+    
     name: "",
-    stockInKg: "",
+    current_stock: "",
+    threshold_stock: "",
   });
 
-  const handleDelete = (index) => {
+  const handleDelete = async (index) => {
     const updatedMaterials = [...materials];
     updatedMaterials.splice(index, 1);
+    const response = await axios.post(`/api/item/delete`, {item_id : materials[index].item_id})
+    console.log(response)
+      if (response) {
+    triggerFetch(true);
     setMaterials(updatedMaterials);
+  }
   };
 
-  const handleAddMaterial = () => {
+   const handleAddMaterial = async () => {
+    const response = await axios.post('/api/item/add', newMaterial)
+    console.log(response)
+    if(response.status == "200") {
     setMaterials([...materials, newMaterial]);
+      triggerFetch(true)
+  }
     setNewMaterial({
-      id: "",
       name: "",
-      stockInKg: "",
+      current_stock: "",
+      threshold_stock: "",
     });
   };
 
@@ -54,9 +72,9 @@ const InventoryItems = () => {
           materials.map((material, index) => (
             <tr key={index}>
               <td>{index + 1}</td>
-              <td>{material.id}</td>
+              <td>{material.item_id}</td>
               <td>{material.name}</td>
-              <td>{material.stockInKg}</td>
+              <td>{material.current_stock}</td>
               <td>
                 <button className='btn btn-error btn-xs font-bold' onClick={() => handleDelete(index)}>Delete</button>
               </td>
@@ -75,15 +93,11 @@ const InventoryItems = () => {
       <dialog id="add_material_modal" className="modal">
         <div className="modal-box flex flex-col">
           <h3 className="font-bold text-lg mb-3">Add Material</h3>
-          <form onSubmit={(e) => { e.preventDefault(); handleAddMaterial(); }}>
-            <input
-            required
-              className="input input-bordered m-2"
-              type="text"
-              placeholder="Material ID"
-              value={newMaterial.id}
-              onChange={(e) => setNewMaterial({ ...newMaterial, id: e.target.value })}
-            />
+          <form 
+          onSubmit={(e) => { e.preventDefault(); handleAddMaterial(); }}
+          className='flex flex-col'
+          >
+           
             <input
             required
               className="input input-bordered m-2"
@@ -97,8 +111,16 @@ const InventoryItems = () => {
               className="input input-bordered m-2"
               type="text"
               placeholder="Available (in Kg)"
-              value={newMaterial.stockInKg}
-              onChange={(e) => setNewMaterial({ ...newMaterial, stockInKg: e.target.value })}
+              value={newMaterial.current_stock}
+              onChange={(e) => setNewMaterial({ ...newMaterial, current_stock: e.target.value })}
+            />
+            <input
+            required
+              className="input input-bordered m-2"
+              type="text"
+              placeholder="Threshold (in Kg)"
+              value={newMaterial.threshold_stock}
+              onChange={(e) => setNewMaterial({ ...newMaterial, threshold_stock: e.target.value })}
             />
             <div className="modal-action">
               <button type="submit" className="btn btn-success mr-2 btn-sm">Add</button>
