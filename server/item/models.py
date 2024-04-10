@@ -1,10 +1,10 @@
-from flask import jsonify, request
+from flask import jsonify, request, session
 from app import db
 
 class Item:
     
-    def add_item(self, business_id):
-        
+    def add_item(self):
+        business_id = session.get("business_id")
         item_name = request.json["item_name"]
         quantity = float(request.json["quantity"])
 
@@ -27,10 +27,10 @@ class Item:
             
         return jsonify( { "error": " failed to add item" } ), 400
     
-    def fetch_items(self, business_id):
+    def fetch_items(self):
 
         items_list = []
-
+        business_id = session.get("business_id")
         business = db.businesses.find_one({"_id": business_id})
 
         # Retrieve the items_list from the business document
@@ -40,8 +40,8 @@ class Item:
         else:
             return jsonify({"success": False, "error": "Could not fetch items"})
         
-    def delete_item(self, business_id, item_id):
-
+    def delete_item(self, item_id):
+        business_id = session.get("business_id")
         if db.businesses.count_documents({"_id": business_id, "items.item_id": item_id}):
             result = db.businesses.update_one(
                 {"_id": business_id},
