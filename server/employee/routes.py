@@ -17,9 +17,9 @@ def fetch_employees():
     return Employee().fetch_employees()
     
 
-@app.route("/user/change-password", methods=["POST"])
+@app.route("/user/edit_details", methods=["POST"])
 def change_password():
-    return Employee().change_password()
+    return Employee().edit_employee_info()
     
 
 @app.route('/user/remove', methods=["POST"])
