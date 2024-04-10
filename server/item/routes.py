@@ -11,6 +11,6 @@ def fetch_items():
     return Item().fetch_items()
     
     
-@app.route("/item/<item_id>/delete", methods=["POST"])
-def delete_item(item_id):
-    return Item().delete_item(item_id)
+@app.route("/item/delete", methods=["POST"])
+def delete_item():
+    return Item().delete_item()

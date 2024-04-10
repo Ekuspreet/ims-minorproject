@@ -42,8 +42,9 @@ class Item:
         else:
             return jsonify({"success": False, "error": "Could not fetch items"})
         
-    def delete_item(self, item_id):
+    def delete_item(self):
         business_id = session.get("business_id")
+        item_id = request.json["item_id"]
         if db.businesses.count_documents({"_id": business_id, "items.item_id": item_id}):
             result = db.businesses.update_one(
                 {"_id": business_id},
