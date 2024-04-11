@@ -48,7 +48,7 @@ class Job:
         business_id = session.get("business_id")
         job_id = request.json.get("job_id")
 
-        result = db.businesses.update_one({"_id": business_id}, {"$pull": {"jobs.job_id": job_id}})
+        result = db.businesses.update_one({"_id": business_id}, {"$pull": {"jobs": {"job_id": job_id}}})
 
         if result.modified_count == 1:
             return jsonify({"success": True, "message": "Job deleted successfully."})
