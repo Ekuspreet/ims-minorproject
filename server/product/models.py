@@ -149,7 +149,7 @@ class Product():
                 if result.modified_count == 1:
                     return jsonify({"success": True, "message": "item deleted."})
                 else:
-                    return jsonify({"success": False, "message": "Failed to remove item."}), 500
+                    return jsonify({"success": False, "message": "Failed to remove item."}), 201
 
     def get_product_id(self, business_id):
         business = db.businesses.find_one({"_id": business_id})
