@@ -11,7 +11,6 @@ class Product():
             for product in product_list:
                 del product["items"]
             
-            print(product_list)
             return jsonify({"success": True,"product_list": product_list})
         else:
             return jsonify({"success": False, "error": "Could not fetch products"})
@@ -23,7 +22,7 @@ class Product():
         if not business_id:
             return jsonify({"success": False, "error": "No business ID provided"})
         if not product_id:
-            return jsonify({"success": False, "error": "No product ID provided"})
+            return jsonify({"success": False, "item_list": []})
 
         business = db.businesses.find_one({"_id": business_id})
 
