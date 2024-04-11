@@ -1,5 +1,6 @@
 from flask import request, session, jsonify
 from app import db
+from datetime import datetime
 
 class Job:
 
@@ -36,7 +37,8 @@ class Job:
             "product_id": product_id,
             "product": product_name,
             "quantity": quantity,
-            "status": "pending"
+            "status": "pending", 
+            "completion_time": ''
         }
         
         if db.businesses.update_one({"_id": business_id}, {"$push" :{"jobs": job}}):
@@ -111,7 +113,7 @@ class Job:
                 db.businesses.update_one({"_id": business_id, "items.item_id": item_id}, {"$set": {"items.$.current_stock": new_stock}})
 
 
-        result = db.businesses.update_one({"_id": business_id, "jobs.job_id": job_id}, {"$set": {"jobs.$.status": "finish"}})
+        result = db.businesses.update_one({"_id": business_id, "jobs.job_id": job_id}, {"$set": {"jobs.$.status": "finish", "jobs.$.completion_time": datetime.now()}})
 
         if result.modified_count == 1:
             return jsonify({"success": True, "message": "Job finished successfully."})
