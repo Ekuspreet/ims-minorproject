@@ -16,14 +16,16 @@ class Product():
         
     def fetch_products_items(self):
         business_id = session.get("business_id")
+        product_id = request.json.get("product_id")
         business = db.businesses.find_one({"_id": business_id})
         if business:
             product_list = business["products"]
             for product in product_list:
-                del product["items"]
-            return jsonify({"success": True,"product_list": product_list})
+                if product["product_id"] == product_id:
+                    item_list = product["items"]
+                    return jsonify({"success": True,"product_list": item_list})
         else:
-            return jsonify({"success": False, "error": "Could not fetch products"})
+            return jsonify({"success": False, "error": "Could not fetch items"})
 
     def add_product(self):
         
