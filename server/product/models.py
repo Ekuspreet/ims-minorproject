@@ -23,7 +23,7 @@ class Product():
             for product in product_list:
                 if product["product_id"] == product_id:
                     item_list = product["items"]
-                    return jsonify({"success": True,"product_list": item_list})
+                    return jsonify({"success": True,"item_list": item_list})
         else:
             return jsonify({"success": False, "error": "Could not fetch items"})
 

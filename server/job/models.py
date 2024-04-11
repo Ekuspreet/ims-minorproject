@@ -3,7 +3,7 @@ from app import db
 
 class Job:
 
-    def fetch_jobs(self):
+    def fetch_active_jobs(self):
         business_id = session.get("business_id")
         business = db.businesses.find_one({"_id": business_id})
         jobs = business.get("jobs")
@@ -27,7 +27,11 @@ class Job:
             "quantity": quantity,
             "status": "pending"
         }
-        db.businesses.update_one({"_id": business_id}, {"$push": {}})
+        
+        if db.businesses.update_one({"_id": business_id}, {"$push" :{"jobs": job}}):
+            return jsonify({"success": True, "Message": "job added successfully."})
+        
+        return jsonify({"success": False, "Message": "job could not be added"})
 
     def get_job_id(self, business_id):
         business = db.businesses.find_one({"_id": business_id})
