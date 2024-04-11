@@ -10,6 +10,8 @@ class Product():
             product_list = business["products"]
             for product in product_list:
                 del product["items"]
+            
+            print(product_list)
             return jsonify({"success": True,"product_list": product_list})
         else:
             return jsonify({"success": False, "error": "Could not fetch products"})

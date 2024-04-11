@@ -46,7 +46,28 @@ class Job:
             return jsonify({"success": False, "message": "Failed to delete job"})
         
     def start_job(self):
-        pass
+        business_id = session.get("business_id")
+        job_id = request.json.get("job_id")
+
+        result = db.businesses.update_one({"_id": business_id, "jobs.job_id": job_id}, {"$set": {"jobs.$.status": "under progress"}})
+
+        if result.modified_count == 1:
+            return jsonify({"success": True, "message": "Job deleted successfully."})
+        
+        else:
+            return jsonify({"success": False, "message": "Failed to delete job"})
+        
+    def start_job(self):
+        business_id = session.get("business_id")
+        job_id = request.json.get("job_id")
+
+        result = db.businesses.update_one({"_id": business_id, "jobs.job_id": job_id}, {"$set": {"jobs.$.status": "under progress"}})
+
+        if result.modified_count == 1:
+            return jsonify({"success": True, "message": "Job deleted successfully."})
+        
+        else:
+            return jsonify({"success": False, "message": "Failed to delete job"})
 
     def get_job_id(self, business_id):
         business = db.businesses.find_one({"_id": business_id})
