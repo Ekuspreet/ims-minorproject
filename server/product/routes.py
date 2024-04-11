@@ -6,7 +6,7 @@ def fetch_products():
     return Product().fetch_products()
 
 @app.route("/product/fetch-items")
-def fetch_products():
+def fetch_products_items():
     return Product().fetch_products_items()
 
 @app.route("/product/fetch-remaining-items")
