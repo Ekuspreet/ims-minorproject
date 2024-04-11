@@ -15,17 +15,19 @@ class Product():
             return jsonify({"success": False, "error": "Could not fetch products"})
         
     def fetch_products_items(self):
+
         business_id = session.get("business_id")
-        product_id = request.json.get("product_id")
-        business = db.businesses.find_one({"_id": business_id})
-        if business:
-            product_list = business["products"]
-            for product in product_list:
-                if product["product_id"] == product_id:
-                    item_list = product["items"]
-                    return jsonify({"success": True,"item_list": item_list})
+        product_id = request.json["product_id"]
+
+        product = db.businesses.find_one({"_id": business_id, "product_id": product_id})
+        print(product)
+
+        if product:
+            item_list = product.get("items", [])  
+            return jsonify({"success": True, "item_list": item_list})
         else:
             return jsonify({"success": False, "error": "Could not fetch items"})
+
 
     def add_product(self):
         
