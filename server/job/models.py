@@ -113,7 +113,7 @@ class Job:
                 db.businesses.update_one({"_id": business_id, "items.item_id": item_id}, {"$set": {"items.$.current_stock": new_stock}})
 
 
-        result = db.businesses.update_one({"_id": business_id, "jobs.job_id": job_id}, {"$set": {"jobs.$.status": "finish", "jobs.$.completion_time": datetime.now()}})
+        result = db.businesses.update_one({"_id": business_id, "jobs.job_id": job_id}, {"$set": {"jobs.$.status": "finish", "jobs.$.completion_time": str(datetime.now())}})
 
         if result.modified_count == 1:
             return jsonify({"success": True, "message": "Job finished successfully."})
