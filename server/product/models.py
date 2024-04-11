@@ -32,17 +32,16 @@ class Product():
         business_id = session.get("business_id")
         name = request.json("name")
         batch_size = request.json("batch_size")
+        product_id = self.get_product_id(business_id)
 
         product = {
+            "product_id": product_id,
             "name": name,
             "batch_size": batch_size,
             "items": []
         }
-        product["product_id"] = self.get_product_id(business_id)
-        if product["product_id"] == None:
-            return jsonify({"Error": "Invalid business Id"})
 
-        if  db.businesses.update_one({"_id": business_id}, {"$push" :{"products": product}}):
+        if db.businesses.update_one({"_id": business_id}, {"$push" :{"products": product}}):
             return jsonify({"success": True, "Message": "Product added successfully."})
         
         return jsonify({"success": False, "Message": "Product could not be added"})
