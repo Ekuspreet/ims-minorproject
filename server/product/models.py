@@ -30,8 +30,8 @@ class Product():
     def add_product(self):
         
         business_id = session.get("business_id")
-        name = request.json("name")
-        batch_size = request.json("batch_size")
+        name = request.json.get("name")
+        batch_size = request.json.get("batch_size")
         product_id = self.get_product_id(business_id)
 
         product = {

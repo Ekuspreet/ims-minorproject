@@ -27,7 +27,7 @@ class Job:
             "quantity": quantity,
             "status": "pending"
         }
-        db.businesses.update_one({"_id": business_id}, {})
+        db.businesses.update_one({"_id": business_id}, {"$push": {}})
 
     def get_job_id(self, business_id):
         business = db.businesses.find_one({"_id": business_id})
