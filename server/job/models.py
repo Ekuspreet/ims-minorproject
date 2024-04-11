@@ -93,13 +93,13 @@ class Job:
         if not product:
             return jsonify({"success": False, "message": "couldn't find product"})
         
-        quantity = job["quantity"]
-        quantity_in_kg = int(quantity) * 50
-        batch_size = product["batch_size"]
+        quantity = int(job["quantity"])
+        quantity_in_kg = quantity * 50
+        batch_size = int(product["batch_size"])
 
         for prod_item in product["items"]:
             item_id = prod_item["item_id"]
-            required_stock = prod_item["quantity"]
+            required_stock = float(prod_item["quantity"])
             item = None
             for db_item in business["items"]:
                 if db_item["item_id"] == item_id:
