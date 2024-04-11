@@ -23,7 +23,7 @@ class Product():
         if not product_id:
             return jsonify({"success": False, "error": "No product ID provided"})
 
-        business = db_client.businesses.find_one({"_id": business_id})
+        business = db.businesses.find_one({"_id": business_id})
 
         if not business:
             return jsonify({"success": False, "error": "Business not found"})
