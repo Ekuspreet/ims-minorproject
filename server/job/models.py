@@ -14,7 +14,7 @@ class Job:
 
         return jsonify({"active_jobs": active_jobs})
 
-    def add_job(self):
+    def create_job(self):
         business_id = session.get("business_id")
         product_id = request.json.get("product_id")
         product_name = request.json.get("product_name")
@@ -32,6 +32,21 @@ class Job:
             return jsonify({"success": True, "Message": "job added successfully."})
         
         return jsonify({"success": False, "Message": "job could not be added"})
+    
+    def cancel_job():
+        business_id = session.get("business_id")
+        job_id = request.json.get("job_id")
+
+        result = db.businesses.update_one({"_id": business_id}, {"$pull": {"jobs.job_id": job_id}})
+
+        if result.modified_count == 1:
+            return jsonify({"success": True, "message": "Job deleted successfully."})
+        
+        else:
+            return jsonify("success": False, "message": "Failed to delete job")
+        
+    def start_job(self):
+        pass
 
     def get_job_id(self, business_id):
         business = db.businesses.find_one({"_id": business_id})

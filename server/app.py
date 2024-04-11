@@ -24,6 +24,7 @@ from business import routes
 from employee import routes
 from item import routes
 from product import routes
+from job import routes
 
 
 @app.route("/autoauthenticate")
