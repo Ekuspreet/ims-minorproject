@@ -5,7 +5,7 @@ from product.models import Product
 def fetch_products():
     return Product().fetch_products()
 
-@app.route("/product/fetch-items")
+@app.route("/product/fetch-items", methods=["POST"])
 def fetch_products_items():
     return Product().fetch_products_items()
 
