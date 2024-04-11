@@ -46,7 +46,7 @@ class Product():
         
         return jsonify({"success": False, "Message": "Product could not be added"})
 
-    def product_item():
+    def add_product_item():
         business_id = session.get("business_id")
         if not business_id:
             return jsonify({"success": False, "error": "Business ID not found in session."}), 400

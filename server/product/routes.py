@@ -19,7 +19,7 @@ def add_product():
 
 @app.route("/product/add_item", methods=["POST"])
 def product_item():
-    return Product.product_item()
+    return Product.add_product_item()
 
 @app.route("/product/remove", methods = ["POST"])
 def remove_product():
