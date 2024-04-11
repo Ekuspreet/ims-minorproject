@@ -11,9 +11,9 @@ class Job:
         active_jobs = []
         for job in jobs:
             if job["status"] == "pending":
-                active_jobs.append(job)
-            if job['status'] == 'in progress':
                 pending_jobs.append(job)
+            if job['status'] == 'in progress':
+                active_jobs.append(job)
 
         return jsonify({"active_jobs": active_jobs, "pending_jobs": pending_jobs})
 
