@@ -17,7 +17,15 @@ class Job:
     def create_job(self):
         business_id = session.get("business_id")
         product_id = request.json.get("product_id")
-        product_name = request.json.get("product_name")
+        business = db.businesses.find_one({"_id": business_id})
+        product = None
+        for prod in business["products"]:
+            if prod["product_id"] == product_id:
+                product = prod
+                break
+
+        product_name = product["name"]
+        
         quantity = int(request.json.get("quantity"))
         job_id = self.get_job_id(business_id)
         job = {

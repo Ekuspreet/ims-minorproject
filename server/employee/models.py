@@ -6,6 +6,7 @@ class Employee:
 
     def user_info(self):
         if "logged_in" in session:
+            print(session)
             return jsonify({"user_info": session, "business_id": session["business_id"]})
         else:
             return jsonify({"user_info": {"logged_in": False}})
