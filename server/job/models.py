@@ -7,12 +7,15 @@ class Job:
         business_id = session.get("business_id")
         business = db.businesses.find_one({"_id": business_id})
         jobs = business.get("jobs")
+        pending_jobs = []
         active_jobs = []
         for job in jobs:
-            if job["status"] is not "finished":
+            if job["status"] == "pending":
                 active_jobs.append(job)
+            if job['status'] == 'in progress':
+                pending_jobs.append(job)
 
-        return jsonify({"active_jobs": active_jobs})
+        return jsonify({"active_jobs": active_jobs, "pending_jobs": pending_jobs})
 
     def create_job(self):
         business_id = session.get("business_id")
