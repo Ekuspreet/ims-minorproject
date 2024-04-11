@@ -9,6 +9,10 @@ def fetch_products():
 def fetch_products():
     return Product().fetch_products_items()
 
+@app.route("/product/fetch-remaining-items")
+def remaining_items():
+    return Product().remaining_items()
+
 @app.route("/product/add", methods = ["POST"])
 def add_product():
     return Product().add_product()
