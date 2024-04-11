@@ -93,24 +93,28 @@ class Product():
         product_items = {}
         product_id = request.json.get("product_id")
         business = db.businesses.find_one({"_id": business_id})
-        item_list = business["items"]
         
-        if not product_id:
+        if business:
+            item_list = business["items"]
+            
+            if not product_id:
+                return jsonify({"success": False, "remaining_items": []})
+
+            for product in business["products"]:
+                if product["product_id"] == product_id:
+                    product_items = product["items"]
+                    break
+
+            used_itemid = []
+            for item in product_items:
+                used_itemid.append(item['item_id'])
+
+            remaining_items = [item for item in item_list if item["item_id"] not in used_itemid]
+
+            return jsonify({"success": True, "remaining_items": remaining_items}), 200
+        
+        else :
             return jsonify({"success": False, "remaining_items": []})
-
-        for product in business["products"]:
-            if product["product_id"] == product_id:
-                product_items = product["items"]
-                break
-
-        used_itemid = []
-        for item in product_items:
-            used_itemid.append(item['item_id'])
-
-        remaining_items = [item for item in item_list if item["item_id"] not in used_itemid]
-
-        return jsonify({"success": True, "remaining_items": remaining_items}), 200
-
 
     def remove_product(self):
         product_id = request.json["product_id"]
