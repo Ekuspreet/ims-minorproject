@@ -104,6 +104,8 @@ class Product():
         for item in product_items:
             used_itemid.append(item['item_id'])
 
+        remaining_items = []
+        
         remaining_items = [item for item in item_list if item["item_id"] not in used_itemid]
 
         return jsonify({"success": True, "remaining_items": remaining_items}), 200
