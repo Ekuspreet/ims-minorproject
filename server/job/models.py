@@ -125,7 +125,7 @@ class Job:
         jobs = business.get("jobs")
         finished_jobs = []
         for job in jobs:
-            if job["status"] == "finished":
+            if job["status"] == "finish":
                 finished_jobs.append(job)
 
         return jsonify({"finished_jobs": finished_jobs})
