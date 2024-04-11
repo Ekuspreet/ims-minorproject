@@ -44,7 +44,7 @@ class Job:
         
         return jsonify({"success": False, "Message": "job could not be added"})
     
-    def cancel_job():
+    def cancel_job(self):
         business_id = session.get("business_id")
         job_id = request.json.get("job_id")
 
