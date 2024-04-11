@@ -43,7 +43,7 @@ class Job:
             return jsonify({"success": True, "message": "Job deleted successfully."})
         
         else:
-            return jsonify("success": False, "message": "Failed to delete job")
+            return jsonify({"success": False, "message": "Failed to delete job"})
         
     def start_job(self):
         pass

@@ -28,7 +28,7 @@ class Product():
         if not business:
             return jsonify({"success": False, "error": "Business not found"})
         
-        product = []
+        product = None
         for prod in business.get("products", []):
             if prod.get("product_id") == product_id:
                 product = prod
