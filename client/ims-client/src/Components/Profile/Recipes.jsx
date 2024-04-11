@@ -1,65 +1,53 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import RecipeItems from './RecipeItems';
 
 const Recipes = () => {
-  const [recipes, setRecipes] = useState([
-    {
-      recipeName: "Copper Wire",
-      recipeId: "RW1",
-      recipe: []
-    },
-    {
-      recipeName: "Copper Coil",
-      recipeId: "CC1",
-      recipe: [
-        { name: "Copper", itemId: "12", quantityRequired: 10 },
-        { name: "Insulation", itemId: "25", quantityRequired: 5 },
-      ]
-    },
-    // Add other recipes as needed
-  ]);
+  const [recipes, setRecipes] = useState([]);
+  const [fetch, triggerFetch] = useState(true)
+  const [newRecipe, setNewRecipe] = useState({});
+ 
 
-  const [newRecipeName, setNewRecipeName] = useState('');
-  const [newItem, setNewItem] = useState({
-    name: '',
-    itemId: '',
-    quantityRequired: ''
-  });
 
-  const handleNewRecipeNameChange = (e) => {
-    setNewRecipeName(e.target.value);
+  useEffect(() => {
+    async function fetchItems() {
+      const response = await axios.get('/api/product/fetch')
+      console.log(response.data)
+      setRecipes(response.data.product_list)
+    }
+    if (fetch) {
+      fetchItems();
+      triggerFetch(false)
+    }
+  }, [recipes])
+
+  const handleNewRecipeChange = (e) => {
+    setNewRecipe({ ...newRecipe, [e.target.name]: e.target.value });
   };
 
-  const handleNewItemChange = (e, field) => {
-    setNewItem({ ...newItem, [field]: e.target.value });
-  };
 
-  const handleAddRecipe = () => {
-    if (newRecipeName.trim() !== '') {
-      const newRecipe = {
-        recipeName: newRecipeName.trim(),
-        recipeId: `R${recipes.length + 1}`,
-        recipe: []
-      };
+  const handleAddRecipe = async () => {
+    console.log(newRecipe)
+
+    const response = await axios.post("/api/product/add", newRecipe)
+    console.log(response)
+    if (response.status == "200") {
+
+      triggerFetch(true)
       setRecipes([...recipes, newRecipe]);
-      setNewRecipeName('');
+      setNewRecipe('');
+
     }
   };
 
-  const handleDeleteRecipe = (recipeIndex) => {
+  const handleDeleteRecipe = async (recipeIndex,recipe_id) => {
+    const response = await axios.post('/api/product/remove', {product_id : recipe_id})
+    if(response.status == "200"){
+    triggerFetch(true)
     const updatedRecipes = recipes.filter((_, index) => index !== recipeIndex);
-    setRecipes(updatedRecipes);
+    setRecipes(updatedRecipes);}
   };
 
-  const handleAddItem = (recipeIndex) => {
-    const updatedRecipes = [...recipes];
-    updatedRecipes[recipeIndex].recipe.push(newItem);
-    setRecipes(updatedRecipes);
-    setNewItem({
-      name: '',
-      itemId: '',
-      quantityRequired: ''
-    });
-  };
 
   const handleDeleteItem = (recipeIndex, itemIndex) => {
     const updatedRecipes = [...recipes];
@@ -70,106 +58,85 @@ const Recipes = () => {
   return (
     <>
       <div className="overflow-auto h-[29em] mt-3 ">
-        <table className="table text-center text-lg bg-base-200 font-semibold rounded-xl ">
-          { recipes.length > 0 ?
-          recipes.map((recipe, recipeIndex) => (
-            <div key={recipeIndex} className="collapse  collapse-arrow bg-base-200">
-              <input type="checkbox" className='z-10' />
-              <div className="collapse-title text-xl font-medium">
-                <tr>
-                  <td>ID: {recipe.recipeId}</td>
-                  <td>{recipe.recipeName}</td>
-                </tr>
-              </div>
-              <div className="collapse-content">
-                <table className="table text-center text-lg bg-base-200 font-semibold ">
-                  {/* Table Header */}
-                  <thead className=' sticky top-0 text-md'>
-                    <tr >
-                      <th className='bg-base-200 rounded-2xl'>Sr. No.</th>
-                      <th className='bg-base-200 rounded-2xl'>Material ID</th>
-                      <th className='bg-base-200 rounded-2xl'>Name</th>
-                      <th className='bg-base-200 rounded-2xl'>Required (in Kg)</th>
-                      <th className='bg-base-200 rounded-2xl'>Actions</th>
-                    </tr>
-                  </thead>
-                  {/* Table Body */}
-                  <tbody>
-                    {recipe.recipe.map((material, itemIndex) => (
-                      <tr key={itemIndex}>
-                        <td>{itemIndex + 1}</td>
-                        <td>{material.itemId}</td>
-                        <td>{material.name}</td>
-                        <td>{material.quantityRequired}</td>
-                        <td>
-                          <button className='btn btn-error btn-xs font-bold' onClick={() => handleDeleteItem(recipeIndex, itemIndex)}>Delete</button>
-                        </td>
+        <table className=" table text-center text-lg bg-base-200 font-semibold rounded-xl ">
+          {recipes.length > 0 ?
+            recipes.map((recipe, recipeIndex) => (
+              <div className='flex '>
+                <div className='flex-grow'>
+                  <div key={recipeIndex} className="collapse  collapse-arrow bg-base-200">
+                    <input type="checkbox" className='z-10' />
+
+                    <div className="collapse-title text-xl font-medium">
+                      <tr className='flex items-center justify-between'>
+                        <div>ID: {recipe.product_id} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span>{recipe.name}  &nbsp; <span className='border z-20 p-1 px-3 rounded-lg border-neutral-content'> {recipe.batch_size} Kg</span>
+                        </span>
+                        </div>
+
+
+
                       </tr>
-                    ))}
-                    {/* Row for adding a new item */}
-                    <tr className='sticky bottom-0'>
-                      <td colSpan="5">
-                        <button className="btn my-1 btn-md w-full text-xl bg-base-100" onClick={() => document.getElementById(`add_item_modal_${recipeIndex}`).showModal()}>Add Item</button>
-                        <button className="btn my-1 btn-md btn-error w-full  text-xl" onClick={() => handleDeleteRecipe(recipeIndex)}>Delete Recipe</button>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+                    </div>
+                    <div className="collapse-content">
+                      <table className="table text-center text-lg bg-base-200 font-semibold ">
+                        {/* Table Header */}
+                        <thead className=' sticky top-0 text-md'>
+                          <tr >
+                            <th className='bg-base-200 rounded-2xl'>Sr. No.</th>
+                            <th className='bg-base-200 rounded-2xl'>Material ID</th>
+                            <th className='bg-base-200 rounded-2xl'>Name</th>
+                            <th className='bg-base-200 rounded-2xl'>Required (in Kg)</th>
+                            <th className='bg-base-200 rounded-2xl'>Actions</th>
+                          </tr>
+                        </thead>
+                        {/* Table Body */}
+                        <tbody>
+                          <RecipeItems recipe_id={recipe.product_id} recipeIndex={recipeIndex} recipe_name={recipe.name} />
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+                <button className="btn btn-sm  btn-error text-xl mt-4 mr-2" onClick={() => handleDeleteRecipe(recipeIndex,recipe.product_id)}>Delete</button>
               </div>
-            </div>
-          )):
-          <h2 className='m-4'>No Recipes Exist In Your Business</h2>
+
+
+            )) :
+            <h2 className='m-4'>No Recipes Exist In Your Business</h2>
           }
           {/* Button for adding a new recipe */}
+
           <tr className='sticky bottom-0 bg-base-200 rounded-xl'>
-            <td className='flex justify-center gap-5'>
+            <td >
+              <form
+              className='flex flex-wrap justify-center gap-5 z-20'
+              onSubmit={(e)=>{e.preventDefault(); handleAddRecipe();}}>
               <input
                 className="input input-bordered"
                 type="text"
+                name="name"
+                required
                 placeholder="Enter New Recipe Name"
-                value={newRecipeName}
-                onChange={handleNewRecipeNameChange}
+                value={newRecipe.name}
+                onChange={handleNewRecipeChange}
               />
-              <button className="btn btn-md w-auto text-xl bg-base-100" onClick={handleAddRecipe}>Add A New Recipe</button>
+              <input
+                className="input input-bordered"
+                type="number"
+                name="batch_size"
+                min={1}
+                required
+                placeholder="Enter The Batch Size"
+                value={newRecipe.batch_size}
+                onChange={handleNewRecipeChange}
+              />
+              <input type='submit' className="btn btn-md w-auto text-xl bg-base-100" value = "Add A New Recipe"/>
+              </form>
             </td>
           </tr>
         </table>
       </div>
       {/* Modals for adding items to each recipe */}
-      {recipes.map((recipe, recipeIndex) => (
-        <dialog key={recipeIndex} id={`add_item_modal_${recipeIndex}`} className="modal">
-          <div className="modal-box">
-            <h3 className="font-bold text-lg">Add Item to {recipe.recipeName}</h3>
-            <form onSubmit={(e) => { e.preventDefault();  }}>
-              <input
-                className="input input-bordered"
-                type="text"
-                placeholder="Name"
-                value={newItem.name}
-                onChange={(e) => handleNewItemChange(e, 'name')}
-              />
-              <input
-                className="input input-bordered"
-                type="text"
-                placeholder="Material ID"
-                value={newItem.itemId}
-                onChange={(e) => handleNewItemChange(e, 'itemId')}
-              />
-              <input
-                className="input input-bordered"
-                type="text"
-                placeholder="Required Quantity"
-                value={newItem.quantityRequired}
-                onChange={(e) => handleNewItemChange(e, 'quantityRequired')}
-              />
-              <div className="modal-action">
-                <button type="submit" className='btn' onClick={() => handleAddItem(recipeIndex)}>Add</button>
-                <button className="btn btn-error" onClick={() => document.getElementById(`add_item_modal_${recipeIndex}`).close()}>Close</button>
-              </div>
-            </form>
-          </div>
-        </dialog>
-      ))}
+
     </>
   );
 };

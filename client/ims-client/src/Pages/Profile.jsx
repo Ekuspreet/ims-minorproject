@@ -11,6 +11,7 @@ import InventoryItems from '../Components/Profile/InventoryItems';
 import Recipes from '../Components/Profile/Recipes';
 import Drawer from '../Components/Profile/Drawer';
 import axios from 'axios';
+import CompletedJobs from '../Components/Profile/CompletedJobs';
 
 
 const Profile = () => {
@@ -19,7 +20,7 @@ const Profile = () => {
   const navigate = useNavigate()
   const [user, setUser] = useState({});
   const [isDrawerOpen, setDrawerOpen] = useState(false);
-  const [tab, setTab] = useState('Active Jobs')
+  const [tab, setTab] = useState('Jobs Dashboard')
 
 
   console.log("In Profile")
@@ -67,7 +68,7 @@ const Profile = () => {
 
 
     <>
-      <Drawer toggle = {toggle} setTab = {setTab} isDrawerOpen={isDrawerOpen} >
+      <Drawer toggle = {toggle} setTab = {setTab} isDrawerOpen={isDrawerOpen} user={user} >
 
         <NavbarProfile user={user.name}  toggler={toggle} logout = {logout} bid={user.bid} />
 
@@ -80,12 +81,13 @@ const Profile = () => {
                 <h2 className='card-title mx-auto'>  {tab} </h2>
               </div>
             </div>
-            {tab == 'Active Jobs' && <Activejobs />}
-            {tab == 'Employees' && <Employees />}
-            {tab == 'Inventory Items' && <InventoryItems />}
-            {tab == 'Recipes' && <Recipes />}
+            {tab == 'Jobs Dashboard' && <Activejobs role = {user.role} />}
+            {tab == 'Employees' && <Employees role = {user.role} />}
+            {tab == 'Inventory Items' && <InventoryItems role = {user.role} />}
+            {tab == 'Recipes' && user.role == "admin" && <Recipes />}
+            {tab == 'Completion Log' && <CompletedJobs />}
           </div>
-          <Alertbox />
+        
 
         </div>
       

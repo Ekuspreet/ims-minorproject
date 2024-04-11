@@ -4,7 +4,7 @@ import axios from 'axios';
 const rawMaterial = [
 ];
 
-const InventoryItems = () => {
+const InventoryItems = ({role}) => {
   const [materials, setMaterials] = useState({});
   const [fetch, triggerFetch] = useState(true)
 
@@ -60,7 +60,7 @@ const InventoryItems = () => {
             <th className='bg-base-200 rounded-2xl'>Material ID</th>
             <th className='bg-base-200 rounded-2xl'>Name</th>
             <th className='bg-base-200 rounded-2xl'>Available (in Kg)</th>
-            <th className='bg-base-200 rounded-2xl'>Actions</th>
+           {role == "admin" && <th className='bg-base-200 rounded-2xl'>Actions</th>}
           </tr>
         </thead>
         <tbody>
@@ -72,19 +72,19 @@ const InventoryItems = () => {
               <td>{material.item_id}</td>
               <td>{material.name}</td>
               <td>{material.current_stock}</td>
-              <td>
+              {role == "admin" && <td>
                 <button className='btn btn-error btn-xs font-bold' onClick={() => handleDelete(index)}>Delete</button>
-              </td>
+              </td>}
             </tr>
           ))):(
             <h2> No Materials In Inventory </h2>
           )
         }
-          <tr className='sticky bottom-0'>
+          {role == "admin" && <tr className='sticky bottom-0'>
             <td colSpan="5">
               <button className="btn btn-md w-full text-xl bg-base-100" onClick={() => document.getElementById('add_material_modal').showModal()}>Add Item</button>
             </td>
-          </tr>
+          </tr>}
         </tbody>
       </table>
       <dialog id="add_material_modal" className="modal">

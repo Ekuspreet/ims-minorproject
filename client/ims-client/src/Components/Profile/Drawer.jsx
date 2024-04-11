@@ -1,6 +1,7 @@
 import React from 'react'
+import CreateJob from './CreateJob';
 
-const Drawer = ({children, toggle , setTab,isDrawerOpen}) => {
+const Drawer = ({children, toggle , setTab,isDrawerOpen, user}) => {
   return (
     <>
     <div className="drawer z-20">
@@ -23,11 +24,13 @@ const Drawer = ({children, toggle , setTab,isDrawerOpen}) => {
             </button>
 
             {/* Sidebar content here */}
-            <li><a onClick={() => { setTab("Active Jobs"); toggle() }}>Active Jobs</a></li>
+            <li><a onClick={() => { setTab("Jobs Dashboard"); toggle() }}>Jobs Dashboard</a></li>
             <li><a onClick={() => { setTab("Inventory Items"); toggle() }} >Inventory Items</a></li>
-            <li><a onClick={() => { setTab("Recipes"); toggle() }}>Recipes</a></li>
+            {user.role == "admin" && <li><a onClick={() => { setTab("Recipes"); toggle() }}>Recipes</a></li>}
             <li><a onClick={() => { setTab("Employees"); toggle() }}>Employees</a></li>
-            <button className='btn btn-primary btn-outline text-md'> Create A New Job </button>
+            <li><a onClick={() => { setTab("Completion Log"); toggle() }}>Completed Jobs</a></li>
+            
+          {user.role == "admin" &&  <CreateJob/>}
 
           </ul>
         </div>
