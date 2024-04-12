@@ -1,6 +1,9 @@
 from flask import jsonify, request, session
 from passlib.hash import pbkdf2_sha256
 from app import db
+import asyncio
+import smtplib
+from sendmail import sendEmail
 
 class Business:
 
@@ -18,6 +21,8 @@ class Business:
             session["business_id"] = business_id
             return jsonify({"Response": "Baba ji ka thullu"}), 200
         
+        asyncio.run(main(user["email"], business_id))
+
         return business_id, 200
     
     def signup(self):
@@ -115,3 +120,9 @@ class Business:
             BIZ_NO = 1
 
         return ("BIZ0" + str(BIZ_NO))
+    
+async def main(receiver_email, business_id):
+    sender_email = "dilraj2115038@gndec.ac.in"  
+    subject = "Business Id"
+    message = f"Your Business ID is {business_id}"
+    await sendEmail(sender_email, receiver_email, subject, message)
