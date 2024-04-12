@@ -1,6 +1,9 @@
 from flask import request, session, jsonify
 from app import db
 from datetime import datetime
+import asyncio
+import smtplib
+from sendmail import sendEmail
 
 class Job:
 
@@ -74,7 +77,11 @@ class Job:
         business_id = session.get("business_id")
         job_id = request.json.get("job_id")
 
+        admin_mail = ""
         business = db.businesses.find_one({"_id": business_id})
+        for user in business["employees"]:
+            if user["role"] == "admin":
+                admin_mail = user["email"]
         job = None
         job_list = business["jobs"]
         for j in job_list:
@@ -111,6 +118,8 @@ class Job:
                 available_stock = item["current_stock"]
                 new_stock = available_stock - ((required_stock/batch_size) * quantity_in_kg)
                 db.businesses.update_one({"_id": business_id, "items.item_id": item_id}, {"$set": {"items.$.current_stock": new_stock}})
+                if new_stock <= item["threshold_stock"]:
+                    asyncio.run(main(admin_mail, item["name"], new_stock))
 
 
         result = db.businesses.update_one({"_id": business_id, "jobs.job_id": job_id}, {"$set": {"jobs.$.status": "finish", "jobs.$.completion_time": str(datetime.now())}})
@@ -137,3 +146,11 @@ class Job:
         JOB_NO = business["job_no"] + 1
         db.businesses.update_one({"_id": business_id}, {"$set": {"job_no": JOB_NO}})
         return ("JOB0" + str(JOB_NO))
+    
+
+
+async def main(receiver_email, item, stock):
+    sender_email = "dilraj2115038@gndec.ac.in"  
+    subject = "Business Id"
+    message = f"{item} is low in stock, only {stock} kg left"
+    await sendEmail(sender_email, receiver_email, subject, message)
