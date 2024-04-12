@@ -46,9 +46,11 @@ const AuthDisplay = () => {
 
             const response = await axios.post("/api/user/login", finalLoginData);
             console.log(response)
-            navigate("/profile")
+            if(response.status == "200"){
+            navigate("/profile")}
+           
         } catch (error) {
-
+            alert("Invalid Credentials")
             console.error("Error:", error);
 
 

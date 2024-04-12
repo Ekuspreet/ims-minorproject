@@ -34,15 +34,16 @@ const Profile = () => {
 
     async function getUserInfo(){
       const response = await axios.get('/api/user_info')
-      console.log(response.data.user_info.user)
+      console.log(response.data.user_info)
       console.log("IS LOGGED IN :",response.data.user_info.logged_in)
       if(!response.data.user_info.logged_in){
         navigate("/")
 
       }else{
         setTimeout(()=>{
-        setUser(response.data.user_info.user)
-        },500)
+        setUser({...response.data.user_info.user,
+        bid: response.data.user_info.business_id})
+        } ,200)
         
       }
 
@@ -70,7 +71,7 @@ const Profile = () => {
     <>
       <Drawer toggle = {toggle} setTab = {setTab} isDrawerOpen={isDrawerOpen} user={user} >
 
-        <NavbarProfile user={user.name}  toggler={toggle} logout = {logout} bid={user.bid} />
+        <NavbarProfile user={user.name} role={user.role} email = {user.email} emp_id = {user.employee_id}  bid={user.bid} toggler={toggle} logout = {logout}  />
 
         <div className="main-content flex flex-col md:flex-row justify-between p-10 gap-8 ">
 

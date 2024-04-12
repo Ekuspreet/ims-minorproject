@@ -3,7 +3,7 @@ import Bicon from '../../assets/icon.png'
 import { Link } from 'react-router-dom'
 import { useState } from 'react';
 
-const NavbarProfile = ({ toggler, user, logout, bid }) => {
+const NavbarProfile = ({ toggler, user, logout, bid , role , email, emp_id }) => {
 
     return (
         <>
@@ -51,8 +51,11 @@ const NavbarProfile = ({ toggler, user, logout, bid }) => {
 
                     <dialog id="my_modal_1" className="modal">
                         <div className="modal-box">
-                            <h3 className="font-bold text-lg">Hello! {user} </h3>
-                            <p className="py-4">Your Business Id is : {bid}</p>
+                            <h3 className="font-bold text-3xl mb-4">Hello! {user} </h3>
+                            <p className="py-2 font-semibold">Business Id  : {bid}</p>
+                            <p className="py-2 font-semibold">Email Id  : {email}</p>
+                            <p className="py-2 font-semibold">Role  : {role}</p>
+                            <p className="py-2 font-semibold">Employee Id  : {emp_id}</p>
                             <div className="modal-action">
 
                                 {/* if there is a button in form, it will close the modal */}
