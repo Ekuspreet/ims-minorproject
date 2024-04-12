@@ -21,7 +21,7 @@ class Business:
             session["business_id"] = business_id
             return jsonify({"Response": "Baba ji ka thullu"}), 200
         
-        asyncio.run(main(user["email"], business_id))
+        asyncio.run(main(user["email"], user["password"],business_id))
 
         return business_id, 200
     
@@ -121,8 +121,8 @@ class Business:
 
         return ("BIZ0" + str(BIZ_NO))
     
-async def main(receiver_email, business_id):
+async def main(receiver_email, password ,business_id):
     sender_email = "dilraj2115038@gndec.ac.in"  
     subject = "Business Id"
-    message = f"Your Business ID is {business_id}"
+    message = f"Your Business ID is {business_id}\nYour password is: {password}"
     await sendEmail(sender_email, receiver_email, subject, message)
