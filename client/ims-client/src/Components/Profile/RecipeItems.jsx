@@ -77,7 +77,7 @@ const RecipeItems = ({ recipe_id, recipeIndex, recipe_name }) => {
                     <tr key={itemIndex}>
                         <td>{itemIndex + 1}</td>
                         <td>{material.item_id}</td>
-                        <td>{material.name}</td>
+                        <td>{material.item_name}</td>
                         <td>{material.quantity}</td>
                         <td>
                             <button className='btn btn-error btn-xs font-bold' onClick={() => handleDeleteItem(recipe_id, material.item_id)}>Delete</button>

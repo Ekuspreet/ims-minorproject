@@ -68,6 +68,11 @@ class Product():
         
         product_id = request.json.get("product_id")
         item_id = request.json.get("item_id")
+        item_name = ""
+        business = db.businesses.find_one({"_id": business_id})
+        for dbItem in business["items"]:
+            if dbItem["item_id"] == item_id:
+                item_name = dbItem["name"]
         quantity = float(request.json.get("quantity", 0))
         
         if not (product_id and item_id):
@@ -75,6 +80,7 @@ class Product():
         
         item = {
             "item_id": item_id,
+            "item_name": item_name,
             "quantity": quantity
         }
         
