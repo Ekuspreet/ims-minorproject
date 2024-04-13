@@ -68,7 +68,7 @@ class Business:
             db.businesses.insert_one(business)
             
             if db.businesses.update_one({'_id': BIZ_ID}, {'$push': {'employees': employee}}):
-                asyncio.run(main(email, password, BIZ_ID))
+                #asyncio.run(main(email, password, BIZ_ID))
                 return self.start_session(employee, BIZ_ID, False)
             
         return jsonify( { "error": "Signup failed" } ), 400
