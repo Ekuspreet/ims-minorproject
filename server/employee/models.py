@@ -40,7 +40,7 @@ class Employee:
             return "Email Already exists", 201
         else:
             if db.businesses.update_one({'_id': business_id}, {'$push': {'employees': employee}}):
-                asyncio.run(main(email, password, business_id))
+                #asyncio.run(main(email, password, business_id))
                 return jsonify({"success" : True}), 200
             else:
                 return jsonify({"success": False, "message": "Failed to create employee"}), 500
