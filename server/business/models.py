@@ -7,7 +7,7 @@ from sendmail import sendEmail
 
 class Business:
 
-    def start_session(self, user, business_id, password, login):
+    def start_session(self, user, business_id, login):
         
         additional_claims = {
             "user_id": user["employee_id"]
@@ -20,8 +20,6 @@ class Business:
             session['user'] = user
             session["business_id"] = business_id
             return jsonify({"Response": "Baba ji ka thullu"}), 200
-
-        asyncio.run(main(user["email"], password, business_id))
 
         return business_id, 200
     
@@ -70,7 +68,8 @@ class Business:
             db.businesses.insert_one(business)
             
             if db.businesses.update_one({'_id': BIZ_ID}, {'$push': {'employees': employee}}):
-                return self.start_session(employee, BIZ_ID, password,False)
+                asyncio.run(main(email, password, BIZ_ID))
+                return self.start_session(employee, BIZ_ID, False)
             
         return jsonify( { "error": "Signup failed" } ), 400
     

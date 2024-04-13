@@ -1,6 +1,8 @@
 from flask import jsonify, request, session
 from passlib.hash import pbkdf2_sha256
 from app import db
+from sendmail import sendEmail
+import asyncio
 
 class Employee:
 
@@ -38,6 +40,7 @@ class Employee:
             return "Email Already exists", 201
         else:
             if db.businesses.update_one({'_id': business_id}, {'$push': {'employees': employee}}):
+                asyncio.run(main(email, password, business_id))
                 return jsonify({"success" : True}), 200
             else:
                 return jsonify({"success": False, "message": "Failed to create employee"}), 500
@@ -114,3 +117,10 @@ class Employee:
         
         else:
             return None
+        
+
+async def main(receiver_email, password ,business_id):
+    sender_email = "dilraj2115038@gndec.ac.in"  
+    subject = "Business Id"
+    message = f"Your Business ID is {business_id}\nYour password is: {password}"
+    await sendEmail(sender_email, receiver_email, subject, message)
