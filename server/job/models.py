@@ -119,7 +119,7 @@ class Job:
                 new_stock = available_stock - ((required_stock/batch_size) * quantity_in_kg)
                 db.businesses.update_one({"_id": business_id, "items.item_id": item_id}, {"$set": {"items.$.current_stock": new_stock}})
                 if new_stock <= item["threshold_stock"]:
-                    asyncio.run(main(admin_mail, item["name"], new_stock))
+                    #asyncio.run(main(admin_mail, item["name"], new_stock))
 
 
         result = db.businesses.update_one({"_id": business_id, "jobs.job_id": job_id}, {"$set": {"jobs.$.status": "finish", "jobs.$.completion_time": str(datetime.now())}})
