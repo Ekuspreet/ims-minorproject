@@ -15,12 +15,3 @@ async def sendEmail(sender_email, receiver_email, subject, message):
         print("Email sent successfully.")
     except Exception as e:
         print(f"Error: {e}")
-
-async def main():
-    sender_email = "dilraj2115038@gndec.ac.in"  # Replace with your email
-    receiver_email = "amrinder2115012@gndec.ac.in"  # Replace with recipient's email
-    subject = "Test Email"
-    message = "This is a test email sent from Python."
-    await sendEmail(sender_email, receiver_email, subject, message)
-
-asyncio.run(main())
