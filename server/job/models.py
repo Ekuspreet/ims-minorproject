@@ -68,6 +68,50 @@ class Job:
         result = db.businesses.update_one({"_id": business_id, "jobs.job_id": job_id}, {"$set": {"jobs.$.status": "in progress"}})
 
         if result.modified_count == 1:
+            admin_mail = ""
+            business = db.businesses.find_one({"_id": business_id})
+            for user in business["employees"]:
+                if user["role"] == "admin":
+                    admin_mail = user["email"]
+            job = None
+            job_list = business["jobs"]
+            for j in job_list:
+                if j["job_id"] == job_id:
+                    job = j
+                    break
+
+            if not job:
+                return jsonify({"success": False, "message": "Bad JobID"})
+
+            product_id = job["product_id"]
+            product = None
+            for prod in business["products"]:
+                if prod["product_id"] == product_id:
+                    product = prod
+                    break
+
+            if not product:
+                return jsonify({"success": False, "message": "couldn't find product"})
+            
+            quantity = int(job["quantity"])
+            quantity_in_kg = quantity * 50
+            batch_size = int(product["batch_size"])
+
+            for prod_item in product["items"]:
+                item_id = prod_item["item_id"]
+                required_stock = float(prod_item["quantity"])
+                item = None
+                for db_item in business["items"]:
+                    if db_item["item_id"] == item_id:
+                        item = db_item
+                        break
+                if item:
+                    available_stock = item["current_stock"]
+                    new_stock = available_stock - ((required_stock/batch_size) * quantity_in_kg)
+                    db.businesses.update_one({"_id": business_id, "items.item_id": item_id}, {"$set": {"items.$.current_stock": new_stock}})
+                    if new_stock <= item["threshold_stock"]:
+                        pass
+                        #asyncio.run(main(admin_mail, item["name"], new_stock))
             return jsonify({"success": True, "message": "Job deleted successfully."})
         
         else:
@@ -77,50 +121,6 @@ class Job:
         business_id = session.get("business_id")
         job_id = request.json.get("job_id")
 
-        admin_mail = ""
-        business = db.businesses.find_one({"_id": business_id})
-        for user in business["employees"]:
-            if user["role"] == "admin":
-                admin_mail = user["email"]
-        job = None
-        job_list = business["jobs"]
-        for j in job_list:
-            if j["job_id"] == job_id:
-                job = j
-                break
-
-        if not job:
-            return jsonify({"success": False, "message": "Bad JobID"})
-
-        product_id = job["product_id"]
-        product = None
-        for prod in business["products"]:
-            if prod["product_id"] == product_id:
-                product = prod
-                break
-
-        if not product:
-            return jsonify({"success": False, "message": "couldn't find product"})
-        
-        quantity = int(job["quantity"])
-        quantity_in_kg = quantity * 50
-        batch_size = int(product["batch_size"])
-
-        for prod_item in product["items"]:
-            item_id = prod_item["item_id"]
-            required_stock = float(prod_item["quantity"])
-            item = None
-            for db_item in business["items"]:
-                if db_item["item_id"] == item_id:
-                    item = db_item
-                    break
-            if item:
-                available_stock = item["current_stock"]
-                new_stock = available_stock - ((required_stock/batch_size) * quantity_in_kg)
-                db.businesses.update_one({"_id": business_id, "items.item_id": item_id}, {"$set": {"items.$.current_stock": new_stock}})
-                if new_stock <= item["threshold_stock"]:
-                    pass
-                    #asyncio.run(main(admin_mail, item["name"], new_stock))
 
 
         result = db.businesses.update_one({"_id": business_id, "jobs.job_id": job_id}, {"$set": {"jobs.$.status": "finish", "jobs.$.completion_time": str(datetime.now())}})
