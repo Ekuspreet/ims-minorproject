@@ -2,7 +2,6 @@ from flask import request, session, jsonify
 from app import db
 from datetime import datetime
 import asyncio
-import smtplib
 from sendmail import sendEmail
 
 class Job:
@@ -111,7 +110,7 @@ class Job:
                     db.businesses.update_one({"_id": business_id, "items.item_id": item_id}, {"$set": {"items.$.current_stock": new_stock}})
                     if new_stock <= item["threshold_stock"]:
                         pass
-                        #asyncio.run(main(admin_mail, item["name"], new_stock))
+                        asyncio.run(main(admin_mail, item["name"], new_stock))
             return jsonify({"success": True, "message": "Job deleted successfully."})
         
         else:
@@ -151,7 +150,6 @@ class Job:
 
 
 async def main(receiver_email, item, stock):
-    sender_email = "dilraj2115038@gndec.ac.in"  
-    subject = "Business Id"
+    subject = "Item Low On Stock"
     message = f"{item} is low in stock, only {stock} kg left"
-    await sendEmail(sender_email, receiver_email, subject, message)
+    await sendEmail(receiver_email, subject, message)

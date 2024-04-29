@@ -2,7 +2,6 @@ from flask import jsonify, request, session
 from passlib.hash import pbkdf2_sha256
 from app import db
 import asyncio
-import smtplib
 from sendmail import sendEmail
 
 class Business:
@@ -68,7 +67,7 @@ class Business:
             db.businesses.insert_one(business)
             
             if db.businesses.update_one({'_id': BIZ_ID}, {'$push': {'employees': employee}}):
-                #asyncio.run(main(email, password, BIZ_ID))
+                asyncio.run(main(email, password, BIZ_ID))
                 return self.start_session(employee, BIZ_ID, False)
             
         return jsonify( { "error": "Signup failed" } ), 400
@@ -120,8 +119,7 @@ class Business:
 
         return ("BIZ0" + str(BIZ_NO))
     
-async def main(receiver_email, password ,business_id):
-    sender_email = "dilraj2115038@gndec.ac.in"  
+async def main(receiver_email, password ,business_id):  
     subject = "Business Id"
     message = f"Your Business ID is {business_id}\nYour password is: {password}"
-    await sendEmail(sender_email, receiver_email, subject, message)
+    await sendEmail(receiver_email, subject, message)

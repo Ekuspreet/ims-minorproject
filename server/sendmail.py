@@ -1,17 +1,21 @@
-import asyncio
+import ssl
 import smtplib
+from email.message import EmailMessage
 
-async def sendEmail(sender_email, receiver_email, subject, message):
-    print("Attempting to send email.")
-    sender_password = "2V3W7UH6"  # Replace this with the actual password
-    smtp_server = "mail.gndec.ac.in"  # Replace this with the actual SMTP server
-    smtp_port = 465
-    try:
-        session = smtplib.SMTP_SSL(smtp_server, smtp_port)
-        session.login(sender_email, sender_password)
-        msg = f'From: {sender_email}\r\nTo: {receiver_email}\r\nContent-Type: text/plain; charset="utf-8"\r\nSubject: {subject}\r\n\r\n{message}'
-        session.sendmail(sender_email, receiver_email, msg.encode('utf8'))
-        session.quit()
-        print("Email sent successfully.")
-    except Exception as e:
-        print(f"Error: {e}")
+async def sendEmail(reciever_mail, subject, body):
+    sender_mail = 'dilraj082@gmail.com'
+    password = 'shmk sgtq exex ezaf'
+    reciever_mail = 'dilrajs125@gmail.com'
+
+    em = EmailMessage()
+
+    em["From"] = sender_mail
+    em["to"] = reciever_mail
+    em["Subject"] = subject
+    em.set_content(body)
+
+    context = ssl.create_default_context()
+
+    with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
+        smtp.login(sender_mail, password)
+        smtp.sendmail(sender_mail, reciever_mail, em.as_string())
