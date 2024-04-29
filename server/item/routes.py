@@ -5,6 +5,9 @@ from item.models import Item
 def add_item():
     return Item().add_item()
     
+@app.route("/item/update", methods=["POST"])
+def update_item():
+    return Item().update_item()
 
 @app.route("/item/fetch")
 def fetch_items():

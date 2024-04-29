@@ -16,7 +16,6 @@ class Item:
 
         else:
             
-            # create item. here by item we mean raw material
             item = {
                 "item_id": item_id,
                 "name": item_name.title(),
@@ -35,12 +34,41 @@ class Item:
         business_id = session.get("business_id")
         business = db.businesses.find_one({"_id": business_id})
 
-        # Retrieve the items_list from the business document
         if business:
             items_list = business.get("items", [])
             return jsonify({"success": True,"items_list": items_list})
         else:
             return jsonify({"success": False, "error": "Could not fetch items"})
+        
+    def update_item(self):
+        business_id = session.get("business_id")
+        item_id = request.json["item_id"]
+        stock = request.json["stock"]
+        
+        business = db.businesses.find_one({"_id": business_id})
+        
+        if business:
+            for item in business["items"]:
+                if item["item_id"] == item_id:
+                    old_stock = item.get("current_stock", 0)
+                    break
+            else:
+                return jsonify({"error": "Item not found in business"})
+            
+            new_stock = stock + old_stock
+
+            result = db.businesses.update_one(
+                {"_id": business_id, "items.item_id": item_id},
+                {"$set": {"items.$.current_stock": new_stock}}
+            )
+
+            if result.modified_count == 1:
+                return jsonify({"success": "Stock has been updated"})
+            else:
+                return jsonify({"error": "Could not update stock"})
+        
+        else:
+            return jsonify({"error": "Business not found"})
         
     def delete_item(self):
         business_id = session.get("business_id")
