@@ -6,7 +6,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:5000', // Replace with your Flask server URL
+        target: 'https://ims-server-poc6.onrender.com/', // Replace with your Flask server URL
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
       },
