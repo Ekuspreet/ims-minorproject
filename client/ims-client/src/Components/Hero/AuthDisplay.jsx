@@ -44,7 +44,7 @@ const AuthDisplay = () => {
 
             console.log("Submission", finalLoginData);
 
-            const response = await axios.post("/api/user/login", finalLoginData);
+            const response = await axios.post(`${import.meta.env.VITE_BASEURL}/user/login`, finalLoginData);
             console.log(response)
             if(response.status == "200"){
             navigate("/profile")}

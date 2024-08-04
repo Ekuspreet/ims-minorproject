@@ -23,7 +23,7 @@ const SignUp = () => {
         try {
             console.log("Submission", signUpData);
     
-            const response = await axios.post("/api/user/signup", signUpData);
+            const response = await axios.post(`${import.meta.env.VITE_BASEURL}/user/signup`, signUpData);
     
            console.log(response.data)
            alert(response.data);

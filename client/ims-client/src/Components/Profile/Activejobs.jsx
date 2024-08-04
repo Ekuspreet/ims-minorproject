@@ -8,7 +8,7 @@ const ActiveJobs = ({ role }) => {
 
   useEffect(() => {
     async function fetchJobs() {
-      const response = await axios.get('/api/job/fetch');
+      const response = await axios.get(`${import.meta.env.VITE_BASEURL}/job/fetch`);
       if (response.status === 200) {
         setActiveJobs(response.data.active_jobs);
         setPendingJobs(response.data.pending_jobs);
@@ -21,7 +21,7 @@ const ActiveJobs = ({ role }) => {
   }, [fetch]);
 
   const handleFinishJob = async (job_id) => {
-    const response = await axios.post('/api/job/finish', {
+    const response = await axios.post(`${import.meta.env.VITE_BASEURL}/job/finish`, {
       job_id : job_id
     })
     console.log(response);
@@ -33,7 +33,7 @@ const ActiveJobs = ({ role }) => {
   };
 
   const handleCancelJob = async (job_id) => {
-    const response = await axios.post('/api/job/cancel', {
+    const response = await axios.post(`${import.meta.env.VITE_BASEURL}/job/cancel`, {
       job_id : job_id
     })
     console.log(response);
