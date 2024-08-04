@@ -12,7 +12,5 @@ export default defineConfig({
       },
     },
   },
-  build : {
-    target: 'electron-renderer',
-  }
+  
 }) 
