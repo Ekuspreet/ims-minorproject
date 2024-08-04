@@ -1,5 +1,7 @@
-{
-    "rewrites": [
-        { "source": "/api/:path(.*)", "destination": "https://ims-server-poc6.onrender.com/:path" }
-    ]
+{  
+  "rewrites": [
+       { "source": "/api/:match*",
+         "destination": "https://ims-server-poc6.onrender.com/:match*"
+       } 
+ ]
 }
